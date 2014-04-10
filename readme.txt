@@ -1,4 +1,4 @@
-=== Buffer for WordPress ===
+=== Featured Image Caption ===
 Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: buffer, bufferapp, sharing, social, twitter, facebook, linkedin
