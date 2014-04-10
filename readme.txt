@@ -32,6 +32,11 @@ There aren't any options for this plugin. When you activate it, the meta box and
 
 1. Featured Image Caption meta box below the Featured Image meta box
 
+== Upgrade Notice ==
+
+= 0.1.0 =
+Initial release.
+
 == Changelog ==
 
 = 0.1.0 =
