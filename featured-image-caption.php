@@ -28,12 +28,14 @@ class cc_featured_image_caption {
 	
 	// Class constructor
 	function __construct() {
-		// Hooks and filters
-		add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
-		add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
-		
-		// Admin hooks and filters
+		// Admin
 		if ( is_admin() ) {
+			// Initialize in admin
+			$this->admin_initialize();
+			
+			// Hooks and filters
+			add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
+			add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
 			register_activation_hook( __FILE__, array( &$this, 'activate' ) ); // Plugin activation
 			register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) ); // Plugin deactivation
 		}
