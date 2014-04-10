@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.1.0-
+ * Version: 0.1.0
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -18,16 +18,25 @@ class cc_featured_image_caption {
 	// Plugin constants
 	const ID = 'cc-featured-image-caption'; // Plugin ID
 	const NAME = 'Featured Image Caption'; // Plugin name
-	const VERSION = '0.1.0-alpha1'; // Plugin version
-	const WPVER = '3.6'; // Minimum version of WordPress required for this plugin
+	const VERSION = '0.1.0'; // Plugin version
+	const WPVER = '2.7'; // Minimum version of WordPress required for this plugin
 	const PREFIX = 'cc_featured_image_caption_'; // Plugin database/method prefix
 	const METAPREFIX = '_cc_featured_image_caption'; // Post meta database prefix
+	
+	// Class properties
+	private $options; // Plugin options and settings
 	
 	// Class constructor
 	function __construct() {
 		// Hooks and filters
 		add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
 		add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
+		
+		// Admin hooks and filters
+		if ( is_admin() ) {
+			register_activation_hook( __FILE__, array( &$this, 'activate' ) ); // Plugin activation
+			register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) ); // Plugin deactivation
+		}
 	} // End __construct()
 	
 	// Create the meta box
@@ -111,7 +120,63 @@ class cc_featured_image_caption {
 		else {
 			return false;
 		}
-	}
+	} // End get_caption()
+	
+	/* ===== Admin Initialization ===== */
+	function admin_initialize() {
+		// Get plugin options from database
+		$this->options = get_option( self::PREFIX . 'options' );
+		
+		// Run upgrade process
+		$this->upgrade();
+	} // End admin_initialize()
+	
+	// Plugin upgrade
+	function upgrade() {
+		// Check whether the database-stored plugin version number is less than the current plugin version number, or whether there is no plugin version saved in the database
+		if ( ! empty( $this->options['dbversion'] ) && version_compare( $this->options['dbversion'], self::VERSION, '<' ) ) {
+			// Set local variable for options (always the first step in the upgrade process)
+			$options = $this->options;
+			
+			/* Update the plugin version saved in the database (always the last step of the upgrade process) */
+			// Set the value of the plugin version
+			$options['dbversion'] = self::VERSION;
+			
+			// Save to the database
+			update_option( self::PREFIX . 'options', $options );
+			/* End update plugin version */
+		}
+	} // End upgrade()
+	/*
+	===== End Admin Initialization =====
+	*/
+	
+	/*
+	===== Plugin Activation and Deactivation =====
+	*/
+	// Plugin activation
+	public function activate() {
+		// Check to make sure the version of WordPress being used is compatible with the plugin
+		if ( version_compare( get_bloginfo( 'version' ), self::WPVER, '<' ) ) {
+	 		wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
+	 	}
+	 	
+	 	// Default plugin options
+	 	$options = array(
+	 		'dbversion' => self::VERSION, // Current plugin version
+	 	);
+	 	
+	 	// Add options to database
+	 	add_option( self::PREFIX . 'options', $options );
+	} // End activate()
+	
+	// Plugin deactivation
+	public function deactivate() {
+		// Remove the plugin options from the database
+		delete_option( self::PREFIX . 'options' );
+	} // End deactivate
+	
+	/* ===== End Plugin Activation and Deactivation ===== */
 } // End main plugin class
 
 // Create plugin object
