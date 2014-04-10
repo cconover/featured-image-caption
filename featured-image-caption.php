@@ -11,13 +11,10 @@
  * @subpackage featured-image-caption
  **/
 
-// Plugin namespace
-namespace cconover\featured_image_caption;
-
 /**
  * Main plugin class
  */
-class Caption {
+class cc_featured_image_caption {
 	// Plugin constants
 	const ID = 'cc-featured-image-caption'; // Plugin ID
 	const NAME = 'Featured Image Caption'; // Plugin name
@@ -117,9 +114,8 @@ class Caption {
 	}
 } // End main plugin class
 
-// Create plugin object in the global space
-global $cc_featured_image_caption;
-$cc_featured_image_caption = new \cconover\featured_image_caption\Caption;
+// Create plugin object
+$cc_featured_image_caption = new cc_featured_image_caption;
 
 /**
  * Theme function
@@ -128,6 +124,9 @@ $cc_featured_image_caption = new \cconover\featured_image_caption\Caption;
  * To display the results, you must use 'echo' with this function
  */
 function cc_featured_image_caption() {
+	// Access global featured image caption object and post object
+	global $cc_featured_image_caption, $post;
+	
 	// Retrieve the caption from post meta
 	$caption = $cc_featured_image_caption->get_caption( $post->ID );
 	
