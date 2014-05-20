@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: buffer, bufferapp, sharing, social, twitter, facebook, linkedin
 Requires at least: 2.7
 Tested up to: 3.9
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,9 @@ The meta box is added in the side column of the Edit Post or Edit Page screen. A
 = Are there any options for this plugin? =
 There aren't any options for this plugin. When you activate it, the meta box and theme function are added.
 
+= How do I customize the formatting of the caption? =
+The caption is contained inside a <span> tag with the class "cc-featured-image-caption" which you can use to apply CSS to the caption.
+
 == Screenshots ==
 
 1. Featured Image Caption meta box below the Featured Image meta box
@@ -38,6 +41,9 @@ There aren't any options for this plugin. When you activate it, the meta box and
 Initial release.
 
 == Changelog ==
+
+= 0.1.1 =
+Added <span> around the rendered caption to allow for CSS formatting.
 
 = 0.1.0 =
 Initial release.
