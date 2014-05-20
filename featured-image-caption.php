@@ -198,7 +198,7 @@ function cc_featured_image_caption() {
 	$caption = $cc_featured_image_caption->get_caption( $post->ID );
 	
 	// Place caption data inside an HTML <span> to allow for CSS formatting
-	$caption = '<span class="' . self::ID . '">' . $caption . '</span>';
+	$caption = '<span class="cc-featured-image-caption">' . $caption . '</span>';
 	
 	// Return the result
 	return $caption;
