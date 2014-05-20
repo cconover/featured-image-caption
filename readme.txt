@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: buffer, bufferapp, sharing, social, twitter, facebook, linkedin
 Requires at least: 2.7
 Tested up to: 3.9
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,9 @@ The caption is contained inside a <span> tag with the class "cc-featured-image-c
 Initial release.
 
 == Changelog ==
+
+= 0.1.2 =
+Fixed bug in declaring <span> class.
 
 = 0.1.1 =
 Added <span> around the rendered caption to allow for CSS formatting.
