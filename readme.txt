@@ -37,10 +37,16 @@ The caption is contained inside a <span> tag with the class "cc-featured-image-c
 
 == Upgrade Notice ==
 
+= 0.1.3 =
+Fixed check in theme function for whether a caption is set, and how the function handles that information.
+
 = 0.1.0 =
 Initial release.
 
 == Changelog ==
+
+= 0.1.3 =
+Theme function checks whether the caption data returned to it is false. If false, the theme function also returns false. If not false, the theme function returns a formatted caption string.
 
 = 0.1.2 =
 Fixed bug in declaring <span> class.
