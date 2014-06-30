@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: buffer, bufferapp, sharing, social, twitter, facebook, linkedin
 Requires at least: 2.7
-Tested up to: 3.9
-Stable tag: 0.1.2
+Tested up to: 3.9.1
+Stable tag: 0.1.3
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

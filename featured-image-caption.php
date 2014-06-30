@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.1.2
+ * Version: 0.1.3
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -18,7 +18,7 @@ class cc_featured_image_caption {
 	// Plugin constants
 	const ID = 'cc-featured-image-caption'; // Plugin ID
 	const NAME = 'Featured Image Caption'; // Plugin name
-	const VERSION = '0.1.2'; // Plugin version
+	const VERSION = '0.1.3'; // Plugin version
 	const WPVER = '2.7'; // Minimum version of WordPress required for this plugin
 	const PREFIX = 'cc_featured_image_caption_'; // Plugin database/method prefix
 	const METAPREFIX = '_cc_featured_image_caption'; // Post meta database prefix
@@ -197,10 +197,17 @@ function cc_featured_image_caption() {
 	// Retrieve the caption from post meta
 	$caption = $cc_featured_image_caption->get_caption( $post->ID );
 	
-	// Place caption data inside an HTML <span> to allow for CSS formatting
-	$caption = '<span class="cc-featured-image-caption">' . $caption . '</span>';
+	// If a caption is set, assemble it with the proper HTML and return it
+	if ( ! false == $caption ) {
+		// Place caption data inside an HTML <span> to allow for CSS formatting
+		$caption = '<span class="cc-featured-image-caption">' . $caption . '</span>';
 	
-	// Return the result
-	return $caption;
+		// Return the result
+		return $caption;
+	}
+	// If no caption is set, return false
+	else {
+		return false;
+	}
 } // End cc_featured_image_caption()
 ?>
