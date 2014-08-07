@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.1.3
+ * Version: 0.2.0
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -18,7 +18,7 @@ class cc_featured_image_caption {
 	// Plugin constants
 	const ID = 'cc-featured-image-caption'; // Plugin ID
 	const NAME = 'Featured Image Caption'; // Plugin name
-	const VERSION = '0.1.3'; // Plugin version
+	const VERSION = '0.2.0'; // Plugin version
 	const WPVER = '2.7'; // Minimum version of WordPress required for this plugin
 	const PREFIX = 'cc_featured_image_caption_'; // Plugin database/method prefix
 	const METAPREFIX = '_cc_featured_image_caption'; // Post meta database prefix
@@ -104,7 +104,7 @@ class cc_featured_image_caption {
 		
 		// Now that we've validated nonce and permissions, let's save the caption data
 		// Sanitize the caption
-		$caption = sanitize_text_field( $_POST[self::ID] );
+		$caption = wp_kses_post( $_POST[self::ID] );
 		
 		// Update the caption meta field
 		update_post_meta( $post_id, self::METAPREFIX, $caption );
@@ -188,9 +188,9 @@ $cc_featured_image_caption = new cc_featured_image_caption;
  * Theme function
  * Use this function to retrieve the caption for the featured image
  * This function must be used within The Loop
- * To display the results, you must use 'echo' with this function
+ * @param bool $echo whether to print the results [true] or return them [false] (default: true)
  */
-function cc_featured_image_caption() {
+function cc_featured_image_caption( $echo=true ) {
 	// Access global featured image caption object and post object
 	global $cc_featured_image_caption, $post;
 	
@@ -199,15 +199,37 @@ function cc_featured_image_caption() {
 	
 	// If a caption is set, assemble it with the proper HTML and return it
 	if ( ! false == $caption ) {
-		// Place caption data inside an HTML <span> to allow for CSS formatting
-		$caption = '<span class="cc-featured-image-caption">' . $caption . '</span>';
-	
-		// Return the result
-		return $caption;
+		// If $echo is true, print the caption
+		if ( $echo ) {
+		    // Place caption data inside an HTML <span> to allow for CSS formatting
+		    $caption = '<span class="cc-featured-image-caption">' . $caption . '</span>';
+		    
+		    echo $caption;
+		}
+		// If false, return the caption
+		else {
+    		return $caption;
+		}
 	}
 	// If no caption is set, return false
 	else {
 		return false;
 	}
 } // End cc_featured_image_caption()
+
+/**
+ * Check whether a featured image caption is set
+ * This function returns a boolean depending on whether a featured image caption is set for the post
+ * This function must be used within The Loop
+ */
+function cc_has_featured_image_caption() {
+    // If the featured image caption function does not return false, a featured image caption is set
+    if ( ! false == cc_featured_image_caption( false ) ) {
+        return true;
+    }
+    // If it does return false, a featured image caption is not set
+    else {
+        return false;
+    }
+} // End cc_has_featured_image_caption()
 ?>
