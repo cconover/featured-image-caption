@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: image, caption, featured image
 Requires at least: 2.7
 Tested up to: 4.0
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ Use the function `cc_has_featured_image_caption()` to find out whether a caption
 
 == Upgrade Notice ==
 
+= 0.3.1 =
+Added dedicated fields for image source attribution.
+
 = 0.3.0 =
 Added dedicated fields for image source attribution.
 
@@ -65,6 +68,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.3.1 =
+Only display caption text data if it has been set.
 
 = 0.3.0 =
 Dedicated fields for image source attribution. When formatted text is requested, the source information has its own CSS class.
