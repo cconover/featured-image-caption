@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: image, caption, featured image
 Requires at least: 2.7
 Tested up to: 4.0
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
