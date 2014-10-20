@@ -52,6 +52,9 @@ Use the function `cc_has_featured_image_caption()` to find out whether a caption
 
 == Upgrade Notice ==
 
+= 0.3.2 =
+Removed image source attribution pre-text.
+
 = 0.3.1 =
 Added dedicated fields for image source attribution.
 
@@ -68,6 +71,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.3.2 =
+Removed image source attribution pre-text.
 
 = 0.3.1 =
 Only display caption text data if it has been set.
