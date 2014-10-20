@@ -258,11 +258,11 @@ function cc_featured_image_caption( $echo = true, $source = true ) {
 			if ( ! empty( $captiondata['source_text'] ) && false != $source ) {
 				// If source attribution has a URL, format the source as a link
 				if ( ! empty( $captiondata['source_url'] ) ) {
-					$caption .= ' <span class="cc-featured-image-caption-source">Image source: <a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
+					$caption .= ' <span class="cc-featured-image-caption-source"><a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
 				}
 				// If no URL is set, just display the text
 				else {
-					$caption .= ' <span class="cc-featured-image-caption-source">Image source: ' . $captiondata['source_text'] . '</span>';
+					$caption .= ' <span class="cc-featured-image-caption-source">' . $captiondata['source_text'] . '</span>';
 				}
 			}
 
