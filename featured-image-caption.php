@@ -48,7 +48,7 @@ class cc_featured_image_caption {
 	 */
 	function metabox() {
 		// Specify the screens where the meta box should be available
-		$screens = array( 'post', 'page' );
+		$screens = apply_filters('cc_featured_image_caption_screens', array( 'post', 'page' ) );
 
 		// Iterate through the specified screens to add the meta box
 		foreach ( $screens as $screen ) {
