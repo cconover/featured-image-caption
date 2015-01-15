@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption#donate
 Tags: image, caption, featured image
 Requires at least: 2.7
-Tested up to: 4.0
-Stable tag: 0.3.2
+Tested up to: 4.1
+Stable tag: 0.3.3
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ Use the function `cc_has_featured_image_caption()` to find out whether a caption
 
 == Upgrade Notice ==
 
+= 0.3.3 =
+Added support for custom post types.
+
 = 0.3.2 =
 Removed image source attribution pre-text.
 
@@ -72,6 +75,9 @@ Initial release.
 
 == Changelog ==
 
+= 0.3.3 =
+Added support for custom post types. Thanks to [anlutro](https://github.com/cconover/wp-featured-image-caption/pull/6) for the contribution.
+
 = 0.3.2 =
 Removed image source attribution pre-text.
 
@@ -82,7 +88,7 @@ Only display caption text data if it has been set.
 Dedicated fields for image source attribution. When formatted text is requested, the source information has its own CSS class.
 
 = 0.2.0 =
-* SYNTAX CHANGE: The theme function cc_featured_image_caption() no longer needs to be used with `echo` but instead defaults to echo. If you'd like to return the result, add `false` as an argument for the function like so: `cc_featured_image_caption( false );`
+* SYNTAX CHANGE: The theme function `cc_featured_image_caption()` no longer needs to be used with `echo` but instead defaults to echo. If you'd like to return the result, add `false` as an argument for the function like so: `cc_featured_image_caption( false );`
 * Allow HTML tags in the caption. Only permits tags that WordPress allows in post content.
 * A new function has been added to check whether a caption is set for the post. Use the function `cc_has_featured_image_caption()` which returns `true` if a caption is set, and `false` if a caption is not set.
 
@@ -90,10 +96,10 @@ Dedicated fields for image source attribution. When formatted text is requested,
 Theme function checks whether the caption data returned to it is false. If false, the theme function also returns false. If not false, the theme function returns a formatted caption string.
 
 = 0.1.2 =
-Fixed bug in declaring <span> class.
+Fixed bug in declaring `<span>` class.
 
 = 0.1.1 =
-Added <span> around the rendered caption to allow for CSS formatting.
+Added `<span>` around the rendered caption to allow for CSS formatting.
 
 = 0.1.0 =
 Initial release.
