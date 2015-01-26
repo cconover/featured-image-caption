@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.3.3
+ * Version: 0.3.4
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -11,14 +11,16 @@
  * @subpackage featured-image-caption
  **/
 
+namespace cconover;
+
 /**
  * Main plugin class
  */
-class cc_featured_image_caption {
+class FeaturedImageCaption {
 	// Plugin constants
 	const ID = 'cc-featured-image-caption'; // Plugin ID
 	const NAME = 'Featured Image Caption'; // Plugin name
-	const VERSION = '0.3.3'; // Plugin version
+	const VERSION = '0.3.4'; // Plugin version
 	const WPVER = '2.7'; // Minimum version of WordPress required for this plugin
 	const PREFIX = 'cc_featured_image_caption_'; // Plugin database/method prefix
 	const METAPREFIX = '_cc_featured_image_caption'; // Post meta database prefix
@@ -67,7 +69,7 @@ class cc_featured_image_caption {
 	 */
 	function metabox_callback( $post ) {
 		// Add a nonce field to verify data submissions came from our site
-		wp_nonce_field( array( &$this, 'metabox' ), self::PREFIX . 'nonce' );
+		wp_nonce_field( self::ID, self::PREFIX . 'nonce' );
 
 		// Retrieve the current caption as a string, if set
 		$caption = get_post_meta( $post->ID, self::METAPREFIX, true );
@@ -95,15 +97,7 @@ class cc_featured_image_caption {
 		If it wasn't, return the post ID and be on our way.
 		*/
 		// If no nonce was provided, return the post ID
-		if ( ! isset( $_POST[self::PREFIX . 'nonce'] ) ) {
-			return $post_id;
-		}
-
-		// Set a local variable for the nonce
-		$nonce = $_POST[self::PREFIX . 'nonce'];
-
-		// Verify that the nonce is valid
-		if ( ! wp_verify_nonce( $nonce, array( &$this, 'metabox' ) ) ) {
+		if ( ! isset( $_POST[self::PREFIX . 'nonce'] ) && ! wp_verify_nonce( $_POST[self::PREFIX . 'nonce'], self::ID ) ) {
 			return $post_id;
 		}
 
@@ -169,10 +163,20 @@ class cc_featured_image_caption {
 	function upgrade() {
 		// Check whether the database-stored plugin version number is less than the current plugin version number, or whether there is no plugin version saved in the database
 		if ( ! empty( $this->options['dbversion'] ) && version_compare( $this->options['dbversion'], self::VERSION, '<' ) ) {
-			// Set local variable for options (always the first step in the upgrade process)
+			/**
+			 * FIRST STEP ALWAYS!!!
+			 * Set local variable for options
+			 */
 			$options = $this->options;
 
-			/* Update the plugin version saved in the database (always the last step of the upgrade process) */
+			/* == UPGRADE ACTIONS == */
+
+			/* == END UPGRADE ACTIONS == */
+
+			/**
+			 * LAST STEPS ALWAYS!!!
+			 * Update the plugin version saved in the database
+			 */
 			// Set the value of the plugin version
 			$options['dbversion'] = self::VERSION;
 
@@ -218,17 +222,17 @@ class cc_featured_image_caption {
 } // End main plugin class
 
 // Create plugin object
-$cc_featured_image_caption = new cc_featured_image_caption;
+$cc_featured_image_caption = new \cconover\FeaturedImageCaption;
 
 /**
  * Theme function
  * Use this function to retrieve the caption for the featured image. This function must be used within The Loop.
  *
- * @param 	boolean $echo 	Whether to print the results [true] or return them [false] (default: true)
- * @param 	boolean $source Whether to include source data, if available. (default: true)
+ * @param 	boolean $echo 			Whether to print the results [true] or return them [false] (default: true)
+ * @param 	boolean $attribution	Whether to include attribution data, if available. (default: true)
  * @return 	mixed
  */
-function cc_featured_image_caption( $echo = true, $source = true ) {
+function cc_featured_image_caption( $echo = true, $attribution = true ) {
 	// Access global featured image caption object and post object
 	global $cc_featured_image_caption, $post;
 
@@ -255,7 +259,7 @@ function cc_featured_image_caption( $echo = true, $source = true ) {
 			}
 
 			// If source attribution data is availble and desired, display it
-			if ( ! empty( $captiondata['source_text'] ) && false != $source ) {
+			if ( ! empty( $captiondata['source_text'] ) && false != $attribution ) {
 				// If source attribution has a URL, format the source as a link
 				if ( ! empty( $captiondata['source_url'] ) ) {
 					$caption .= ' <span class="cc-featured-image-caption-source"><a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
@@ -279,7 +283,7 @@ function cc_featured_image_caption( $echo = true, $source = true ) {
 			}
 
 			// If source attribution data is set and desired, include it
-			if ( ! empty( $captiondata['source_text'] ) && false != $source ) {
+			if ( ! empty( $captiondata['source_text'] ) && false != $attribution ) {
 				// If a source URL is set, create a link
 				if ( ! empty( $captiondata['source_url'] ) ) {
 					$caption .= ' <a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a>';
