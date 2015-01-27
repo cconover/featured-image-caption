@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=pl
 Tags: image, caption, featured image
 Requires at least: 2.7
 Tested up to: 4.1
-Stable tag: 0.3.4
+Stable tag: 0.4.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,8 +52,8 @@ Use the function `cc_has_featured_image_caption()` to find out whether a caption
 
 == Upgrade Notice ==
 
-= 0.3.4 =
-Fixes security vulnerability.
+= 0.4.0 =
+Restructured the plugin for performance. Fixed security vulnerability.
 
 = 0.3.3 =
 Added support for custom post types.
@@ -78,7 +78,8 @@ Initial release.
 
 == Changelog ==
 
-= 0.3.4 =
+= 0.4.0 =
+* Restructured the plugin to improve performance.
 * Fixed a bug with nonce verification when saving the caption data.
 
 = 0.3.3 =
