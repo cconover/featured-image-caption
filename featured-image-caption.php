@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.4.0
+ * Version: 0.4.1
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -13,7 +13,7 @@
 
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
-	die;
+	die( 'You cannot access this resouce directly.' );
 }
 
 // Create plugin object
@@ -59,7 +59,13 @@ function cc_featured_image_caption( $echo = true, $attribution = true ) {
 		if ( ! empty( $captiondata['source_text'] ) && false != $attribution ) {
 			// If source attribution has a URL, format the source as a link
 			if ( ! empty( $captiondata['source_url'] ) ) {
-				$caption .= ' <span class="' . $pluginid . '-source"><a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
+				// If the link is set to open in a new window, add the target attribute to the a tag
+				if ( ! empty( $captiondata['new_window'] ) ) {
+					$caption .= ' <span class="' . $pluginid . '-source"><a href="' . $captiondata['source_url'] . '" target="_blank">' . $captiondata['source_text'] . '</a></span>';
+				}
+				else {
+					$caption .= ' <span class="' . $pluginid . '-source"><a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
+				}
 			}
 			// If no URL is set, just display the text
 			else {

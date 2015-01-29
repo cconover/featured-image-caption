@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=pl
 Tags: image, caption, featured image
 Requires at least: 2.7
 Tested up to: 4.1
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ Use the function `cc_has_featured_image_caption()` to find out whether a caption
 
 == Upgrade Notice ==
 
+= 0.4.1 =
+Added the option to have the source link open in a new window.
+
 = 0.4.0 =
 Restructured the plugin for performance. Fixed security vulnerability.
 
@@ -77,6 +80,10 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.4.1 =
+* Added the option to have the source link open in a new window. This option is on a post-by-post basis. Thanks to [avluis](https://github.com/cconover/wp-featured-image-caption/issues/9) for the suggestion.
+* Every time you save a post, the "new window" setting is saved to your user options as the default for your user for that setting.
 
 = 0.4.0 =
 * Restructured the plugin to improve performance.
