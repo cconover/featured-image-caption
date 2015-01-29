@@ -12,13 +12,14 @@ class FeaturedImageCaption {
     // Plugin constants
     const ID			= 'cc-featured-image-caption';	// Plugin ID
     const NAME			= 'Featured Image Caption';		// Plugin name
-    const VERSION		= '0.4.0';						// Plugin version
+    const VERSION		= '0.4.1';						// Plugin version
     const WPVER			= '2.7';						// Minimum version of WordPress required for this plugin
     const PREFIX		= 'cc_featured_image_caption_';	// Plugin database prefix
     const METAPREFIX	= '_cc_featured_image_caption';	// Post meta database prefix
 
     // Class properties
     protected $options; // Plugin options and settings
+    protected $pluginpath; // Directory path to the plugin root
 
     /**
     * Class constructor
@@ -26,11 +27,14 @@ class FeaturedImageCaption {
     function __construct() {
         // Get plugin options from database
         $this->options = get_option( self::PREFIX . 'options' );
-        
+
+        // Set the plugin directory root path
+        $this->pluginpath = plugin_dir_path( __FILE__ );
+
         // Admin
         if ( is_admin() ) {
             // Include the file containing the main Admin class and create an admin object
-            require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
+            require_once( $this->pluginpath . 'admin/featured-image-caption-admin.php' );
             $this->admin = new Admin;
         }
     }

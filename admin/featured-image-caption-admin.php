@@ -58,11 +58,12 @@ class Admin extends FeaturedImageCaption {
             );
         }
 
-        echo 'Caption text <textarea style="width: 100%; max-width: 100%;" id="' . self::PREFIX . '_caption_text" name="' . self::PREFIX . '_caption_text">' . ( ! empty( $caption['caption_text'] ) ? esc_attr( $caption['caption_text'] ) : null ) . '</textarea>';
+        echo '<label for="' . self::PREFIX . 'caption_text">Caption text</label><textarea style="width: 100%; max-width: 100%;" id="' . self::PREFIX . 'caption_text" name="' . self::PREFIX . 'caption_text">' . ( ! empty( $caption['caption_text'] ) ? esc_attr( $caption['caption_text'] ) : null ) . '</textarea>';
         echo '<br><br>';
         echo '<strong>Source Attribution</strong><br>';
-        echo 'Text <input style="width: 100%;" id="' . self::PREFIX . '_source_text" name="' . self::PREFIX . '_source_text" value="' . ( ! empty( $caption['source_text'] ) ? $caption['source_text'] : null ) . '">';
-        echo 'URL <input style="width: 100%;" id="' . self::PREFIX . '_source_url" name="' . self::PREFIX . '_source_url" value="' . ( ! empty( $caption['source_url'] ) ? $caption['source_url'] : null ) . '">';
+        echo '<label for="' . self::PREFIX . 'source_text">Text</label><input type="text" style="width: 100%;" id="' . self::PREFIX . 'source_text" name="' . self::PREFIX . 'source_text" value="' . ( ! empty( $caption['source_text'] ) ? $caption['source_text'] : null ) . '">';
+        echo '<label for="' . self::PREFIX . 'source_url">URL</label><input type="text" style="width: 100%;" id="' . self::PREFIX . 'source_url" name="' . self::PREFIX . 'source_url" value="' . ( ! empty( $caption['source_url'] ) ? $caption['source_url'] : null ) . '">';
+        echo '<input type="checkbox" name="' . self::PREFIX . 'new_window" value="1"' . ( $this->new_window_checked( $caption ) ? " checked" : null ) . '><label for="' . self::PREFIX . 'new_window">Open in new window</label>';
     }
 
     /**
@@ -95,13 +96,46 @@ class Admin extends FeaturedImageCaption {
         // Now that we've validated nonce and permissions, let's save the caption data
         // Sanitize the caption
         $caption = array(
-        'caption_text'	=> wp_kses_post( $_POST[self::PREFIX . '_caption_text'] ),
-        'source_text'	=> sanitize_text_field( $_POST[self::PREFIX . '_source_text'] ),
-        'source_url'	=> esc_url_raw( $_POST[self::PREFIX . '_source_url'] )
+            'caption_text'	=> wp_kses_post( $_POST[self::PREFIX . 'caption_text'] ),
+            'source_text'	=> sanitize_text_field( $_POST[self::PREFIX . 'source_text'] ),
+            'source_url'	=> esc_url_raw( $_POST[self::PREFIX . 'source_url'] ),
+            'new_window'    => ( ! empty( $_POST[self::PREFIX . 'new_window'] ) ? true : false )
         );
 
         // Update the caption meta field
         update_post_meta( $post_id, self::METAPREFIX, $caption );
+
+        // Update the user default for the "new window" checkbox
+        update_user_option( get_current_user_id(), self::PREFIX . 'new_window', $caption['new_window'] );
+    }
+
+    /**
+     * Whether the "new window" checkbox should be checked
+     * @param   array   $caption    The caption data
+     *
+     * @return  boolean
+     */
+    private function new_window_checked( $caption ) {
+        // If "new window" status is set for the caption data
+        if ( ! empty( $caption['new_window'] ) ) {
+            if ( $caption['new_window'] ) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        // If not set, look for the user option
+        else {
+            $new_window = get_user_option( self::PREFIX . 'new_window', get_current_user_id() );
+
+            if ( $new_window ) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     /**
