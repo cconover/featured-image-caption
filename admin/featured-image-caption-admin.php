@@ -6,7 +6,7 @@
  * @subpackage featured-image-caption
  */
 
-namespace cconover;
+ namespace cconover\FeaturedImageCaption;
 
 class Admin extends FeaturedImageCaption {
 
@@ -175,6 +175,11 @@ class Admin extends FeaturedImageCaption {
         // Check to make sure the version of WordPress being used is compatible with the plugin
         if ( version_compare( get_bloginfo( 'version' ), self::WPVER, '<' ) ) {
             wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
+        }
+
+        // Check that the current theme support featured images
+        if ( ! current_theme_supports( 'post-thumbnails' ) ) {
+            wp_die( 'Your current theme does not have support for post thumbnails (featured images). Please <a href="http://codex.wordpress.org/Post_Thumbnails">add support in your current theme, or activate a theme that already supports them.' );
         }
 
         // Default plugin options
