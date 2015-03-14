@@ -179,7 +179,7 @@ class Admin extends FeaturedImageCaption {
 
         // Check that the current theme support featured images
         if ( ! current_theme_supports( 'post-thumbnails' ) ) {
-            wp_die( 'Your current theme does not have support for post thumbnails (featured images). Please <a href="http://codex.wordpress.org/Post_Thumbnails">add support in your current theme, or activate a theme that already supports them.' );
+            wp_die( 'Your current theme does not have support for post thumbnails (featured images), which is required to use this plugin. Please add support in your current theme, or activate a theme that already supports them.' );
         }
 
         // Default plugin options
