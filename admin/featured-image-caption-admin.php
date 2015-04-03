@@ -12,15 +12,32 @@ class Admin extends FeaturedImageCaption {
 
     // Class constructor
     function __construct() {
-        // Initialize admin
+        parent::__construct();
+
+        // Admin initialization
         $this->admin_initialize();
 
-        // Hooks and filters
+        // Meta box hooks
         add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
         add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
-        register_activation_hook( __FILE__, array( &$this, 'activate' ) ); // Plugin activation
-        register_deactivation_hook( __FILE__, array( &$this, 'deactivate' ) ); // Plugin deactivation
+
+        // Plugin option hooks
+        add_action( 'admin_menu', array( &$this, 'create_options_menu' ) ); // Add menu entry to Settings menu
+		add_action( 'admin_init', array( &$this, 'options_init' ) ); // Initialize plugin options
+
+        // Plugin management hooks
+        register_activation_hook( $this->pluginfile, array( &$this, 'activate' ) ); // Plugin activation
+        register_deactivation_hook( $this->pluginfile, array( &$this, 'deactivate' ) ); // Plugin deactivation
     }
+
+    /*
+    |---------------------------------------------------------------------------
+    | Meta Box
+    |---------------------------------------------------------------------------
+    |
+    | The meta box allows you to set the caption for the featured image of a
+    | post or page.
+    */
 
     /**
     * Create the meta box
@@ -138,34 +155,152 @@ class Admin extends FeaturedImageCaption {
         }
     }
 
+
+    /*
+    |---------------------------------------------------------------------------
+    | Plugin Activation/Deactivation and Upgrade
+    |---------------------------------------------------------------------------
+    |
+    | These methods manage the plugin's activation and deactivation.
+    |
+    | There is also a method to handle plugin upgrades, which must follow a
+    | specific sequence. That sequence is documented inside the method.
+    */
+
     /**
-     * Admin initialization
+	 * Create the menu entry under the Settings menu
+	 */
+	function create_options_menu() {
+		add_options_page(
+			self::NAME, // Page title. This is displayed in the browser title bar.
+			self::NAME, // Menu title. This is displayed in the Settings submenu.
+			'manage_options', // Capability required to access the options page for this plugin
+			self::ID, // Menu slug
+			array( &$this, 'options_page' ) // Function to render the options page
+		);
+	}
+
+    /**
+	 * Initialize plugin options
+	 */
+	function options_init() {
+		// Register the plugin options call and the sanitation callback
+		register_setting(
+			self::PREFIX . 'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
+			self::PREFIX . 'options', // The name of the plugin options entry in the database.
+			array( &$this, 'options_validate' ) // The callback method to validate plugin options
+		);
+
+		// Settings section for Post/Page options
+		add_settings_section(
+			'display', // Name of the section
+			'Display', // Title of the section, displayed on the options page
+			array( &$this, 'display_callback' ), // Callback method to display plugin options
+			self::ID // Page ID for the options page
+		);
+
+		// Automatically add the caption to the featured image
+		add_settings_field(
+			'auto_append', // Field ID
+			'Automatically add the caption to the featured image', // Field title/label, displayed to the user
+			array( &$this, 'auto_append_callback' ), // Callback method to display the option field
+			self::ID, // Page ID for the options page
+			'display' // Settings section in which to display the field
+		);
+
+		// Add a container <div> to the caption HTML
+		add_settings_field(
+			'container', // Field ID
+			'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
+			array( &$this, 'container_callback' ), // Callback method to display the option field
+			self::ID, // Page ID for the options page
+			'display' // Settings section in which to display the field
+		);
+	}
+
+    /**
+     * Callback for Display settings section.
      */
-    private function admin_initialize() {
-        // Run upgrade process
-        $this->upgrade();
+    function display_callback() {
+        echo '<p>Adjust the way the caption is displayed on your site.';
     }
 
     /**
-     * Plugin upgrade
+     * Callback for automatically appending caption.
      */
-    private function upgrade() {
-        // Check whether the database-stored plugin version number is less than the current plugin version number, or whether there is no plugin version saved in the database
-        if ( ! empty( $this->options['dbversion'] ) && version_compare( $this->options['dbversion'], self::VERSION, '<' ) ) {
-            /* FIRST STEP ALWAYS!!! Set local variable for options */
-            $options = $this->options;
+    function auto_append_callback() {
+        $checked = ( ! empty( $this->options['auto_append'] ) ) ? ' checked' : null;
 
-            /* UPGRADE ACTIONS */
+        echo '<input id="' . self::PREFIX . 'options[auto_append]" name="' . self::PREFIX . 'options[auto_append]" type="checkbox"' . $checked . '>';
+        echo '<p class="description"><strong>Recommended.</strong> Automatically display the caption data you set for the featured image wherever the featured image is displayed. You do not have to make any modifications to your theme files. If you don\'t know what this means or why you wouldn\'t want this enabled, leave it checked.</p>';
+    }
 
-            /* END UPGRADE ACTIONS */
+    /**
+     * Callback for container <div>
+     */
+    function container_callback() {
+        $checked = ( ! empty( $this->options['container'] ) ) ? ' checked' : null;
 
-            /* LAST STEPS ALWAYS!!! Update the plugin version saved in the database */
-            // Set the value of the plugin version
-            $options['dbversion'] = self::VERSION;
+        echo '<input id="' . self::PREFIX . 'options[container]" name="' . self::PREFIX . 'options[container]" type="checkbox"' . $checked . '>';
+        echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
+     }
 
-            // Save to the database
-            update_option( self::PREFIX . 'options', $options );
-        }
+    /**
+     * Options page
+     */
+    function options_page() {
+        // Make sure the user has permissions to access the plugin options
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( '<p>You do not have sufficient privileges to access this page.' );
+		}
+        ?>
+        <div class="wrap">
+            <?php screen_icon(); ?>
+            <h2><?php echo self::NAME; ?></h2>
+
+            <form action="options.php" method="post">
+                <?php
+                settings_fields( self::PREFIX . 'options_fields' );
+                do_settings_sections( self::ID );
+                submit_button();
+                ?>
+            </form>
+        </div>
+        <?php
+    }
+
+    /**
+     * Validate the options when saved.
+     */
+    function options_validate( $input ) {
+        // Set local variable for plugin options stored in the database
+        $options = $this->options;
+
+        // Set the values to store in the database for each of the options
+        $options['auto_append'] = ( ! empty( $input['auto_append'] ) ) ? true : false;
+        $options['container'] = ( ! empty( $input['container'] ) ) ? true : false;
+
+        return $options;
+    }
+
+
+    /*
+    |---------------------------------------------------------------------------
+    | Plugin Activation/Deactivation and Upgrade
+    |---------------------------------------------------------------------------
+    |
+    | These methods manage the plugin's activation and deactivation.
+    |
+    | There is also a method to handle plugin upgrades, which must follow a
+    | specific sequence. That sequence is documented inside the method.
+    */
+
+    /**
+     * Admin initialization
+     */
+    function admin_initialize() {
+        // Plugin upgrades
+        $this->upgrade();
     }
 
     /**
@@ -184,11 +319,13 @@ class Admin extends FeaturedImageCaption {
 
         // Default plugin options
         $options = array(
-            'dbversion'     => self::VERSION, // Current plugin version
+            'version'       => self::VERSION,   // Current plugin version
+            'auto_append'   => true,            // Automatically append caption to featured image
+            'container'     => true,            // Wrap the caption HTML in a container <div>
         );
 
         // Add options to database
-        add_option( self::PREFIX . 'options', $options );
+        update_option( self::PREFIX . 'options', $options );
     }
 
     /**
@@ -197,6 +334,51 @@ class Admin extends FeaturedImageCaption {
     function deactivate() {
         // Remove the plugin options from the database
         delete_option( self::PREFIX . 'options' );
+    }
+
+    /**
+     * Plugin upgrade
+     */
+    private function upgrade() {
+        // If the database still has the legacy version entry
+        if ( ! empty( $this->options['dbversion'] ) ) {
+            // Set new version entry
+            $this->options['version'] = $this->options['dbversion'];
+
+            // Remove old entry
+            unset( $this->options['dbversion'] );
+        }
+
+        // Check whether the database-stored plugin version number is less than the current plugin version number, or whether there is no plugin version saved in the database
+        if ( ! empty( $this->options['version'] ) && version_compare( $this->options['version'], self::VERSION, '<' ) ) {
+            /* FIRST STEP ALWAYS!!! Set local variable for options */
+            $options = $this->options;
+
+            /* === UPGRADE ACTIONS === (oldest to latest) */
+
+            // Version 0.5.0
+            if ( version_compare( $options['version'], '0.5.0', '<' ) ) {
+                /*
+                Add an option to automatically append caption to the featured
+                image. Since this is an upgrade, we assume the user is already
+                using the plugin's theme function(s), so we'll set this to false
+                to avoid breakage.
+                */
+                $options['auto_append'] = false;
+
+                // Wrap the caption HTML in a container <div>
+                $options['container'] = true;
+            }
+
+            /* === END UPGRADE ACTIONS === */
+
+            /* LAST STEPS ALWAYS!!! Update the plugin version saved in the database */
+            // Set the value of the plugin version
+            $options['version'] = self::VERSION;
+
+            // Save to the database
+            update_option( self::PREFIX . 'options', $options );
+        }
     }
 
 }

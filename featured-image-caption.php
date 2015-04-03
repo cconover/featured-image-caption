@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Featured Image Caption
- * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-data
- * Description: Set a caption for the featured image of a post that can be displayed in your theme
- * Version: 0.4.1
+ * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption-plugin-data
+ * Description: Set a caption for the featured image of a post that can be displayed on your site.
+ * Version: 0.5.0
  * Author: Christiaan Conover
- * Author URI: https://christiaanconover.com?ref=wp-featured-image-caption-plugin-author-uri
+ * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
  * @package cconover
  * @subpackage featured-image-caption
@@ -13,105 +13,55 @@
 
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
-	die( 'You cannot access this resouce directly.' );
+	die( 'You cannot access this resource directly.' );
 }
 
 // Create plugin object
 require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
-$cc_featured_image_caption = new \cconover\FeaturedImageCaption;
+$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
+
+// Admin
+if ( is_admin() ) {
+	// Include the file containing the main Admin class and create an admin object
+	require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
+	new \cconover\FeaturedImageCaption\Admin;
+}
 
 
 /**
- * Theme function
+ * As of version 0.5.0, this function is no longer required, and is retained for legacy support and to allow theme developers more control over placement.
+ *
  * Use this function to retrieve the caption for the featured image.
  * This function must be used within The Loop.
  *
- * @param 	boolean $echo 			Whether to print the results true or return them false (default: true)
- * @param 	boolean $attribution	Whether to include attribution data, if available. (default: true)
+ * @param 	boolean $echo 	Whether to print the results true or return them false (default: true)
+ * @param 	boolean $html 	Whether the result should be formatted HTML. True: HTML. False: array of caption data. Only used if $echo is false.
+ *
  * @return 	mixed
  */
-function cc_featured_image_caption( $echo = true, $attribution = true ) {
-	// Access global featured image caption object and post object
-	global $cc_featured_image_caption, $post;
+function cc_featured_image_caption( $echo = true, $html = true ) {
+	global $cc_featured_image_caption;
 
-	// Set local variable for plugin ID
-	$pluginid = \cconover\FeaturedImageCaption::ID;
-
-	// Retrieve the caption from post meta
-	$captiondata = $cc_featured_image_caption->get_caption( $post->ID );
-
-	// If no caption is set, return false
-	if ( false == $captiondata ) {
-		return false;
-	}
-
-	// If $echo is true, print the caption
-	if ( $echo ) {
-		// If caption text is set, place caption data inside an HTML <span> to allow for CSS formatting
-		if ( ! empty( $captiondata['caption_text'] ) ) {
-			$caption = '<span class="' . $pluginid . '">' . $captiondata['caption_text'] . '</span>';
+	// If the result should be printed to the screen
+	if ( ! empty( $echo ) ) {
+		// If automatic caption appending is disabled
+		if ( ! $cc_featured_image_caption->auto_append() ) {
+			$cc_featured_image_caption->caption( true );
 		}
-		else {
-			$caption = null;
-		}
-
-		// If source attribution data is availble and desired, display it
-		if ( ! empty( $captiondata['source_text'] ) && false != $attribution ) {
-			// If source attribution has a URL, format the source as a link
-			if ( ! empty( $captiondata['source_url'] ) ) {
-				// If the link is set to open in a new window, add the target attribute to the a tag
-				if ( ! empty( $captiondata['new_window'] ) ) {
-					$caption .= ' <span class="' . $pluginid . '-source"><a href="' . $captiondata['source_url'] . '" target="_blank">' . $captiondata['source_text'] . '</a></span>';
-				}
-				else {
-					$caption .= ' <span class="' . $pluginid . '-source"><a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a></span>';
-				}
-			}
-			// If no URL is set, just display the text
-			else {
-				$caption .= ' <span class="' . $pluginid . '-source">' . $captiondata['source_text'] . '</span>';
-			}
-		}
-
-		echo $caption;
-	}
-	// If $echo is false, return the caption
-	else {
-		// If caption text is set, include it
-		if ( ! empty( $captiondata['caption_text'] ) ) {
-			$caption = $captiondata['caption_text'];
-		}
-		else {
-			$caption = null;
-		}
-
-		// If source attribution data is set and desired, include it
-		if ( ! empty( $captiondata['source_text'] ) && false != $attribution ) {
-			// If a source URL is set, create a link
-			if ( ! empty( $captiondata['source_url'] ) ) {
-				$caption .= ' <a href="' . $captiondata['source_url'] . '">' . $captiondata['source_text'] . '</a>';
-			}
-			// If not, just include the text
-			else {
-				$caption .= ' ' . $captiondata['source_text'];
-			}
-		}
-
-		return $caption;
+	} else {
+		return $cc_featured_image_caption->caption( false, $html );
 	}
 }
 
 /**
- * Check whether a featured image caption is set. This function must be used within The Loop.
+ * === DEPRECATED ===
+ * This function is no longer required, and is only retained for legacy support. The plugin now automatically adds the caption data to the featured image. As such, this function ALWAYS returns true to allow the plugin to proceed.
+ *
+ * Check whether a featured image caption is set.
  *
  * @return 	boolean
  */
 function cc_has_featured_image_caption() {
-    // If the featured image caption function returns false, no caption data is set so return false
-    if ( false == cc_featured_image_caption( false ) ) {
-        return false;
-    }
-
-	return true;
+    return true;
 }
 ?>
