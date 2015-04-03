@@ -106,9 +106,8 @@ Initial release.
 
 = 0.5.0 =
 ** Major Release / Breaking Changes **
-* Plugin can automatically add the caption after the featured image, removing the need to modify theme files. If you are upgrading from a previous option this will be disabled by default, otherwise it is enabled by default.
-* Theme function `cc_featured_image_caption()` is not needed if you have automatic caption insertion turned on. If this option is enabled, the function won't display anything. You can, however, still use it to `return` the caption data.
-* CSS classes have changed. See the FAQ for information about the new markup and CSS classes.
+
+Plugin can automatically add the caption after the featured image, removing the need to modify theme files. If you are upgrading from a previous option this will be disabled by default, otherwise it is enabled by default. Theme function `cc_featured_image_caption()` is not needed if you have automatic caption insertion turned on. If this option is enabled, the function won't display anything. You can, however, still use it to `return` the caption data. CSS classes have changed. See the FAQ for information about the new markup and CSS classes.
 
 = 0.4.1 =
 * Added the option to have the source link open in a new window. This option is on a post-by-post basis. Thanks to [avluis](https://github.com/cconover/wp-featured-image-caption/issues/9) for the suggestion.
