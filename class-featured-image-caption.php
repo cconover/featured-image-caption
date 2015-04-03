@@ -37,6 +37,9 @@ class FeaturedImageCaption {
 
         // Hook into post thumbnail
         add_filter( 'post_thumbnail_html', array( &$this, 'post_thumbnail_filter' ) );
+
+        // Shortcode
+        add_shortcode( 'cc-featured-image-caption', array( &$this, 'shortcode' ) );
     }
 
     /**
@@ -55,6 +58,40 @@ class FeaturedImageCaption {
         $html .= $caption;
 
         return $html;
+    }
+
+    /**
+     * Shortcode for displaying caption data.
+     *
+     * @param   array   $atts   Shortcode attributes.
+     *
+     * @return  string  $output The output for the shortcode to display.
+     */
+    public function shortcode( $atts ) {
+        // Set up the attributes for use. Since all attributes are boolean by declaration, no defaults are set.
+        $a = shortcode_atts( array(), $atts );
+
+        // Set local variables for each of the attributes
+        $caption_text = ( ! empty( $a['caption-text'] ) ) ? true : null;
+        $source_text = ( ! empty( $a['source-text'] ) ) ? true : null;
+        $source_url = ( ! empty( $a['caption-url'] ) ) ? true : null;
+        $plaintext = ( ! empty( $a['plaintext'] ) ) ? true : null;
+
+        // Get access to the $post object
+        global $post;
+
+        // Get the caption data
+        $captiondata = $this->caption_data( $post->ID );
+
+        // If plain text is set
+        if ( ! empty( $plaintext ) ) {
+            $caption = $this->plaintext( $captiondata, $caption_text, $source_text, $source_url );
+        }
+
+        // HTML
+        $caption = $this->html( $captiondata, $caption_text, $source_text, $source_url );
+
+        return $caption;
     }
 
     /**
@@ -82,21 +119,8 @@ class FeaturedImageCaption {
             return $captiondata;
         }
 
-        // Assemble the HTML
-        $caption = '<span class="' . self::ID . '-text">' . $captiondata['caption_text'] . '</span>';
-
-        // If the source URL is set, attribution is rendered as a link
-        if ( ! empty( $captiondata['source_url'] ) ) {
-            $new_window = ! empty( $captiondata['new_window'] ) ? ' target="_blank"' : '';
-            $caption .= ' <span class="' . self::ID . '-source"><a href="' . $captiondata['source_url'] . '"' . $new_window . '>' . $captiondata['source_text'] . '</a></span>';
-        } else {
-            $caption .= ' <span class="' . self::ID . '-source">' . $captiondata['source_text'] . '</span>';
-        }
-
-        // If the container <div> is enabled
-        if ( ! empty( $this->options['container'] ) ) {
-            $caption = '<div class="' . self::ID . '">' . $caption . '</div>';
-        }
+        // Get the HTML
+        $caption = $this->html( $captiondata );
 
         // If we don't want to print the result, return it
         if ( empty( $echo ) ) {
@@ -128,6 +152,97 @@ class FeaturedImageCaption {
             $caption = array(
                 'caption_text'	=> $string
             );
+        }
+
+        return $caption;
+    }
+
+    /**
+     * Assemble the caption HTML.
+     *
+     * @param   array       $captiondata    The caption data for the post retrieved from the database.
+     * @param   boolean     $caption_text   Whether to include the caption text. Default: true.
+     * @param   boolean     $source_text    Whether to include the source text. Default: true. If false, $source_url is false since we can't have the link without the source text.
+     * @param   boolean     $source_url     Whether to include the source URL. Default: true. If true, $source_text is true since we can't have the link without the source text.
+     *
+     * @return  string      $caption        The fully assembled caption HTML.
+     */
+    private function html( $captiondata, $caption_text = true, $source_text = true, $source_url = true ) {
+        // Initialize the caption HTML
+        if ( ! empty( $this->options['container'] ) ) {
+            // Start with the container <div>
+            $caption = '<div class="' . self::ID . '">';
+        } else {
+            // Start with an empty string
+            $caption = '';
+        }
+
+        // Caption text
+        if ( ! empty( $caption_text ) && ! empty( $captiondata['caption_text'] ) ) {
+            $caption .= '<span class="' . self::ID . '-text">' . $captiondata['caption_text'] . '</span>';
+        }
+
+        /* Source attribution */
+        // Only move forward if we have source text. Without that, nothing else is useful.
+        if ( ! empty( $captiondata['source_text'] ) ) {
+            // Source link
+            if ( ! empty( $source_url ) && ! empty( $captiondata['source_url'] ) ) {
+                // Whether the link should open in a new window
+                $new_window = ! empty( $captiondata['new_window'] ) ? ' target="_blank"' : '';
+
+                // Source link HTML
+                $caption .= ' <span class="' . self::ID . '-source"><a href="' . $captiondata['source_url'] . '"' . $new_window . '>' . $captiondata['source_text'] . '</a></span>';
+            } elseif ( ! empty( $source_text ) ) {
+                // Caption text, no link
+                $caption .= ' <span class="' . self::ID . '-source">' . $captiondata['source_text'] . '</span>';
+            }
+        }
+
+        // Close the HTML if necessary
+        if ( ! empty( $this->options['container'] ) ) {
+            $caption .= '</div>';
+        }
+
+        return $caption;
+    }
+
+    /**
+     * Assemble the caption as plain text.
+     *
+     * @param   array       $captiondata    The caption data for the post retrieved from the database.
+     * @param   boolean     $caption_text   Whether to include the caption text. Default: true.
+     * @param   boolean     $source_text    Whether to include the source text. Default: true.
+     * @param   boolean     $source_url     Whether to include the source URL. Default: true. If true, other caption filtering parameters are ignored since the source URL can't be returned as plain text with any other elements.
+     *
+     * @return  string      $caption        The fully assembled caption HTML.
+     */
+    private function plaintext( $captiondata, $caption_text = true, $source_text = true, $source_url = true ) {
+        // Start with an empty string
+        $caption = '';
+
+        // Since the source URL can't go as plain text with any other caption elements, we'll start with that
+        if ( ! empty( $source_url ) ) {
+            // If a source URL is set, we'll use it. Otherwise the caption string will be returned empty.
+            if ( ! empty( $captiondata['source_url'] ) ) {
+                $caption .= $captiondata['source_url'];
+            }
+
+            return $caption;
+        }
+
+        // Caption text
+        if ( ! empty( $caption_text ) && ! empty( $captiondata['caption_text'] ) ) {
+            $caption .= $captiondata['caption_text'];
+        }
+
+        // Source text
+        if ( ! empty( $source_text ) && ! empty( $captiondata['source_text'] ) ) {
+            // If the caption text is already part of the caption, we need to put a space before the source text
+            if ( $caption == $captiondata['caption_text'] ) {
+                $caption .= ' ' . $captiondata['source_text'];
+            } else {
+                $caption .= $captiondata['source_text'];
+            }
         }
 
         return $caption;
