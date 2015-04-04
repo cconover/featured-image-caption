@@ -211,6 +211,11 @@ class FeaturedImageCaption {
         // Start with an empty string
         $caption = '';
 
+        // Since the source URL can't be combined with any other caption data in plain text, we'll start with that.
+        if ( $this->is_flag( 'source-url', $atts, false ) && ! empty( $captiondata['source_url'] ) ) {
+            return $captiondata['source_url'];
+        }
+
         // Caption text
         if ( $this->is_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
             $caption .= $captiondata['caption_text'];
@@ -234,17 +239,18 @@ class FeaturedImageCaption {
      *
      * @param   string  $flag   The flag to be checked in the attributes.
      * @param   array   $atts   The shortcode attributes.
+     * @param   boolean $all    Whether to return true if $atts is empty, causing the flag to be assumed. Default: true.
      *
-     * @return  boolean $result True if attribute is set or $atts is empty. False if attribute is not but $atts is not empty.
+     * @return  boolean $result True if attribute is set or assumed. False if attribute is not set or assumed.
      */
-    private function is_flag( $flag, $atts ) {
+    private function is_flag( $flag, $atts, $all = true ) {
         // If 'format' is set in attributes, remove it
         if ( ! empty( $atts['format'] ) ) {
             unset( $atts['format'] );
         }
 
-        // If no flags are set, return true
-        if ( empty( $atts ) ) {
+        // If no flags are set and $all is true, return true
+        if ( $all && empty( $atts ) ) {
             return true;
         }
 
