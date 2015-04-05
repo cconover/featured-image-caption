@@ -94,12 +94,11 @@ class FeaturedImageCaption {
     /**
      * Access and format the caption data.
      *
-     * @param   boolean             $echo       Whether to print the result to the screen. True: print the result. False: return the result. Defaults to false.
      * @param   boolean             $html       Whether the result should be fully-formed HTML. True: create HTML. False: return raw data array.
      *
      * @return  boolean|string      $caption    If successful, returns the requested result. If unsuccessful, returns false.
      */
-    public function caption( $echo = false, $html = true ) {
+    public function caption( $html = true ) {
         // Get the caption data
         global $post;
         $captiondata = $this->caption_data( $post->ID );
@@ -117,12 +116,7 @@ class FeaturedImageCaption {
         // Get the HTML
         $caption = $this->html( $captiondata );
 
-        // If we don't want to print the result, return it
-        if ( empty( $echo ) ) {
-            return $caption;
-        } else {
-            echo $caption;
-        }
+        return $caption;
     }
 
     /**

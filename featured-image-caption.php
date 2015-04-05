@@ -35,21 +35,21 @@ if ( is_admin() ) {
  * This function must be used within The Loop.
  *
  * @param 	boolean $echo 	Whether to print the results true or return them false (default: true)
- * @param 	boolean $html 	Whether the result should be formatted HTML. True: HTML. False: array of caption data. Only used if $echo is false.
+ * @param 	boolean $html 	Whether the result should be formatted HTML. True: HTML. False: array of caption data.
  *
  * @return 	mixed
  */
 function cc_featured_image_caption( $echo = true, $html = true ) {
 	global $cc_featured_image_caption;
 
-	// If the result should be printed to the screen
-	if ( ! empty( $echo ) ) {
+	// If the result should be printed to the screen. $echo and $html MUST both be true.
+	if ( ! empty( $echo ) && ! empty( $html ) ) {
 		// If automatic caption appending is disabled
 		if ( ! $cc_featured_image_caption->auto_append() ) {
-			$cc_featured_image_caption->caption( true );
+			echo $cc_featured_image_caption->caption();
 		}
 	} else {
-		return $cc_featured_image_caption->caption( false, $html );
+		return $cc_featured_image_caption->caption( $html );
 	}
 }
 
