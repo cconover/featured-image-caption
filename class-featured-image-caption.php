@@ -77,15 +77,28 @@ class FeaturedImageCaption {
         global $post;
         $captiondata = $this->caption_data( $post->ID );
 
-        if ( 'html' == $a['format'] ) {
-            // HTML
-            $caption = $this->html( $captiondata, $atts );
-        } elseif ( 'plaintext' == $a['format'] ) {
-            // Plain text
-            $caption = $this->plaintext( $captiondata, $atts );
-        } else {
-            // Invalid format
-            $caption = '';
+        // Format-specific flags to force format, ordered by presedence
+        do {
+            // Source link
+            if ( $this->has_flag( 'source-link', $atts ) ) {
+                $a['format'] = 'html';
+                break;
+            }
+
+            // Source URL
+            if ( $this->has_flag( 'source-url', $atts ) ) {
+                $a['format'] = 'plaintext';
+                break;
+            }
+        } while( 0 );
+
+        // Select the output format
+        switch ( $a['format'] ) {
+            case 'plaintext':
+                $caption = $this->plaintext( $captiondata, $atts );
+                break;
+            default:
+                $caption = $this->html( $captiondata, $atts );
         }
 
         return $caption;
@@ -165,7 +178,7 @@ class FeaturedImageCaption {
         }
 
         // Caption text
-        if ( $this->is_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
+        if ( $this->has_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
             $caption .= '<span class="' . self::ID . '-text">' . $captiondata['caption_text'] . '</span>';
         }
 
@@ -173,13 +186,13 @@ class FeaturedImageCaption {
         // Only move forward if we have source text. Without that, nothing else is useful.
         if ( ! empty( $captiondata['source_text'] ) ) {
             // Source link
-            if ( $this->is_flag( 'source-link', $atts ) && ! empty( $captiondata['source_url'] ) ) {
+            if ( $this->has_flag( 'source-link', $atts ) && ! empty( $captiondata['source_url'] ) ) {
                 // Whether the link should open in a new window
                 $new_window = ! empty( $captiondata['new_window'] ) ? ' target="_blank"' : '';
 
                 // Source link HTML
                 $caption .= ' <span class="' . self::ID . '-source"><a href="' . $captiondata['source_url'] . '"' . $new_window . '>' . $captiondata['source_text'] . '</a></span>';
-            } elseif ( $this->is_flag( 'source-text', $atts ) ) {
+            } elseif ( $this->has_flag( 'source-text', $atts ) ) {
                 // Caption text, no link
                 $caption .= ' <span class="' . self::ID . '-source">' . $captiondata['source_text'] . '</span>';
             }
@@ -206,17 +219,17 @@ class FeaturedImageCaption {
         $caption = '';
 
         // Since the source URL can't be combined with any other caption data in plain text, we'll start with that.
-        if ( $this->is_flag( 'source-url', $atts, false ) && ! empty( $captiondata['source_url'] ) ) {
+        if ( $this->has_flag( 'source-url', $atts, false ) && ! empty( $captiondata['source_url'] ) ) {
             return $captiondata['source_url'];
         }
 
         // Caption text
-        if ( $this->is_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
+        if ( $this->has_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
             $caption .= $captiondata['caption_text'];
         }
 
         // Source text
-        if ( $this->is_flag( 'source-text', $atts ) && ! empty( $captiondata['source_text'] ) ) {
+        if ( $this->has_flag( 'source-text', $atts ) && ! empty( $captiondata['source_text'] ) ) {
             // If the caption text is already part of the caption, we need to put a space before the source text
             if ( $caption == $captiondata['caption_text'] ) {
                 $caption .= ' ' . $captiondata['source_text'];
@@ -237,7 +250,7 @@ class FeaturedImageCaption {
      *
      * @return  boolean $result True if attribute is set or assumed. False if attribute is not set or assumed.
      */
-    private function is_flag( $flag, $atts, $all = true ) {
+    private function has_flag( $flag, $atts, $all = true ) {
         // If 'format' is set in attributes, remove it
         if ( ! empty( $atts['format'] ) ) {
             unset( $atts['format'] );
@@ -273,5 +286,3 @@ class FeaturedImageCaption {
     }
 
 }
-
-?>

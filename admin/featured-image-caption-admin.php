@@ -382,5 +382,3 @@ class Admin extends FeaturedImageCaption {
     }
 
 }
-
-?>

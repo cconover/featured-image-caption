@@ -64,4 +64,3 @@ function cc_featured_image_caption( $echo = true, $html = true ) {
 function cc_has_featured_image_caption() {
     return true;
 }
-?>
