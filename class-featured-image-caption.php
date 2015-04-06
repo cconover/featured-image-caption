@@ -77,24 +77,28 @@ class FeaturedImageCaption {
         global $post;
         $captiondata = $this->caption_data( $post->ID );
 
+        var_dump( $a['format'] );
+
         // Format-specific flags to force format, ordered by presedence
         do {
             // Source link
-            if ( $this->has_flag( 'source-link', $atts ) ) {
+            if ( $this->has_flag( 'source-link', $atts, false ) ) {
                 $a['format'] = 'html';
                 break;
             }
 
             // Source URL
-            if ( $this->has_flag( 'source-url', $atts ) ) {
+            if ( $this->has_flag( 'source-url', $atts, false ) ) {
                 $a['format'] = 'plaintext';
                 break;
             }
         } while( 0 );
 
+        var_dump( $a['format'] );
+
         // Select the output format
         switch ( $a['format'] ) {
-            case 'plaintext':
+            case "plaintext":
                 $caption = $this->plaintext( $captiondata, $atts );
                 break;
             default:
