@@ -12,7 +12,7 @@ class FeaturedImageCaption {
     // Plugin constants
     const ID			= 'cc-featured-image-caption'; // Plugin ID
     const NAME			= 'Featured Image Caption'; // Plugin name
-    const VERSION		= '0.6.0-beta-2'; // Plugin version
+    const VERSION		= '0.6.0-beta-3'; // Plugin version
     const WPVER			= '3.5'; // Minimum version of WordPress required for this plugin
     const PREFIX		= 'cc_featured_image_caption_'; // Plugin database prefix
     const METAPREFIX	= '_cc_featured_image_caption'; // Post meta database prefix
