@@ -199,6 +199,14 @@ class Admin extends FeaturedImageCaption {
 			self::ID // Page ID for the options page
 		);
 
+        // Section for plugin debugging
+        add_settings_section(
+            'debug',
+            'Debug',
+            array( &$this, 'debug_callback' ),
+            self::ID
+        );
+
 		// Automatically add the caption to the featured image
 		add_settings_field(
 			'auto_append', // Field ID
@@ -222,7 +230,26 @@ class Admin extends FeaturedImageCaption {
      * Callback for Display settings section.
      */
     function display_callback() {
-        echo '<p>Adjust the way the caption is displayed on your site.';
+        echo '<p>Adjust the way the caption is displayed on your site.</p>';
+    }
+
+    /**
+     * Callback for debugging.
+     */
+    function debug_callback() {
+        echo '<p>Use the information below for debugging. If you are posting in the support forums or on a GitHub issue, please copy and paste everything shown below.</p>';
+
+        // Versioning information
+        echo '<strong>Version Information</strong><br>';
+        echo 'Plugin: ' . self::VERSION . '<br>';
+        echo 'WordPress: ' . get_bloginfo( 'version' ) . '<br>';
+        echo 'PHP: ' . phpversion() . '<br>';
+
+        // Theme information
+        $theme = wp_get_theme();
+        echo '<br><strong>Theme</strong><br>';
+        echo 'Name: <a href="' . $theme->get( 'ThemeURI' ) . '" target="_blank">' . $theme->get( 'Name' ) . '</a><br>';
+        echo 'Version: ' . $theme->get( 'Version' ) . '<br>';
     }
 
     /**
@@ -243,7 +270,7 @@ class Admin extends FeaturedImageCaption {
 
         echo '<input id="' . self::PREFIX . 'options[container]" name="' . self::PREFIX . 'options[container]" type="checkbox"' . $checked . '>';
         echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
-     }
+    }
 
     /**
      * Options page
