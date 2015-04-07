@@ -339,6 +339,11 @@ class Admin extends FeaturedImageCaption {
             wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
         }
 
+        // Check to make sure the version of PHP being used is compatible
+        if ( version_compare( phpversion(), self::PHPVER, '<' ) ) {
+            wp_die( 'Your version of PHP is too old. Please upgrade to a newer version of PHP.' );
+        }
+
         // Check that the current theme support featured images
         if ( ! current_theme_supports( 'post-thumbnails' ) ) {
             wp_die( 'Your current theme does not have support for post thumbnails (featured images), which is required to use this plugin. Please add support in your current theme, or activate a theme that already supports them.' );
