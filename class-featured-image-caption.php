@@ -37,10 +37,10 @@ class FeaturedImageCaption {
         $this->pluginfile = $this->pluginpath . 'featured-image-caption.php';
 
         // Hook into post thumbnail
-        add_filter( 'post_thumbnail_html', array( &$this, 'post_thumbnail_filter' ) );
+        add_filter( 'post_thumbnail_html', array( $this, 'post_thumbnail_filter' ) );
 
         // Shortcode
-        add_shortcode( 'cc-featured-image-caption', array( &$this, 'shortcode' ) );
+        add_shortcode( 'cc-featured-image-caption', array( $this, 'shortcode' ) );
     }
 
     /**

@@ -17,15 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Create plugin object
-require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
-$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
+function cc_featured_image_caption_loader() {
+	require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
+	$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
 
-// Admin
-if ( is_admin() ) {
-	// Include the file containing the main Admin class and create an admin object
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
-	new \cconover\FeaturedImageCaption\Admin;
+	// Admin
+	if ( is_admin() ) {
+		// Include the file containing the main Admin class and create an admin object
+		require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
+		new \cconover\FeaturedImageCaption\Admin;
+	}
 }
+add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
 
 /**

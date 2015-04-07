@@ -18,16 +18,16 @@ class Admin extends FeaturedImageCaption {
         $this->admin_initialize();
 
         // Meta box hooks
-        add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
-        add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
+        add_action( 'add_meta_boxes', array( $this, 'metabox') ); // Add meta box
+        add_action( 'save_post', array( $this, 'save_metabox' ) ); // Save the caption when the post is saved
 
         // Plugin option hooks
-        add_action( 'admin_menu', array( &$this, 'create_options_menu' ) ); // Add menu entry to Settings menu
-		add_action( 'admin_init', array( &$this, 'options_init' ) ); // Initialize plugin options
+        add_action( 'admin_menu', array( $this, 'create_options_menu' ) ); // Add menu entry to Settings menu
+		add_action( 'admin_init', array( $this, 'options_init' ) ); // Initialize plugin options
 
         // Plugin management hooks
-        register_activation_hook( $this->pluginfile, array( &$this, 'activate' ) ); // Plugin activation
-        register_deactivation_hook( $this->pluginfile, array( &$this, 'deactivate' ) ); // Plugin deactivation
+        register_activation_hook( $this->pluginfile, array( $this, 'activate' ) ); // Plugin activation
+        register_deactivation_hook( $this->pluginfile, array( $this, 'deactivate' ) ); // Plugin deactivation
     }
 
     /*
@@ -51,7 +51,7 @@ class Admin extends FeaturedImageCaption {
             add_meta_box(
                 self::ID, // HTML ID for the meta box
                 self::NAME, // Title of the meta box displayed to the us
-                array( &$this, 'metabox_callback' ), // Callback function for the meta box to display it to the user
+                array( $this, 'metabox_callback' ), // Callback function for the meta box to display it to the user
                 $screen, // Locations where the meta box should be shown
                 'side' // Location where the meta box should be shown. This one is placed on the side.
             );
@@ -176,7 +176,7 @@ class Admin extends FeaturedImageCaption {
 			self::NAME, // Menu title. This is displayed in the Settings submenu.
 			'manage_options', // Capability required to access the options page for this plugin
 			self::ID, // Menu slug
-			array( &$this, 'options_page' ) // Function to render the options page
+			array( $this, 'options_page' ) // Function to render the options page
 		);
 	}
 
@@ -188,14 +188,14 @@ class Admin extends FeaturedImageCaption {
 		register_setting(
 			self::PREFIX . 'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
 			self::PREFIX . 'options', // The name of the plugin options entry in the database.
-			array( &$this, 'options_validate' ) // The callback method to validate plugin options
+			array( $this, 'options_validate' ) // The callback method to validate plugin options
 		);
 
 		// Settings section for Post/Page options
 		add_settings_section(
 			'display', // Name of the section
 			'Display', // Title of the section, displayed on the options page
-			array( &$this, 'display_callback' ), // Callback method to display plugin options
+			array( $this, 'display_callback' ), // Callback method to display plugin options
 			self::ID // Page ID for the options page
 		);
 
@@ -203,7 +203,7 @@ class Admin extends FeaturedImageCaption {
         add_settings_section(
             'debug',
             'Debug',
-            array( &$this, 'debug_callback' ),
+            array( $this, 'debug_callback' ),
             self::ID
         );
 
@@ -211,7 +211,7 @@ class Admin extends FeaturedImageCaption {
 		add_settings_field(
 			'auto_append', // Field ID
 			'Automatically add the caption to the featured image', // Field title/label, displayed to the user
-			array( &$this, 'auto_append_callback' ), // Callback method to display the option field
+			array( $this, 'auto_append_callback' ), // Callback method to display the option field
 			self::ID, // Page ID for the options page
 			'display' // Settings section in which to display the field
 		);
@@ -220,7 +220,7 @@ class Admin extends FeaturedImageCaption {
 		add_settings_field(
 			'container', // Field ID
 			'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
-			array( &$this, 'container_callback' ), // Callback method to display the option field
+			array( $this, 'container_callback' ), // Callback method to display the option field
 			self::ID, // Page ID for the options page
 			'display' // Settings section in which to display the field
 		);
