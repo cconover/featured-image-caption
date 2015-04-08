@@ -3,7 +3,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption-plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed on your site.
- * Version: 0.5.0
+ * Version: 0.6.0
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-plugin-author-uri
  * License: GPLv2
@@ -17,15 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Create plugin object
-require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
-$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
+function cc_featured_image_caption_loader() {
+	require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
+	$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
 
-// Admin
-if ( is_admin() ) {
-	// Include the file containing the main Admin class and create an admin object
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
-	new \cconover\FeaturedImageCaption\Admin;
+	// Admin
+	if ( is_admin() ) {
+		// Include the file containing the main Admin class and create an admin object
+		require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
+		new \cconover\FeaturedImageCaption\Admin;
+	}
 }
+add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
 
 /**
@@ -35,21 +38,21 @@ if ( is_admin() ) {
  * This function must be used within The Loop.
  *
  * @param 	boolean $echo 	Whether to print the results true or return them false (default: true)
- * @param 	boolean $html 	Whether the result should be formatted HTML. True: HTML. False: array of caption data. Only used if $echo is false.
+ * @param 	boolean $html 	Whether the result should be formatted HTML. True: HTML. False: array of caption data.
  *
  * @return 	mixed
  */
 function cc_featured_image_caption( $echo = true, $html = true ) {
 	global $cc_featured_image_caption;
 
-	// If the result should be printed to the screen
-	if ( ! empty( $echo ) ) {
+	// If the result should be printed to the screen. $echo and $html MUST both be true.
+	if ( ! empty( $echo ) && ! empty( $html ) ) {
 		// If automatic caption appending is disabled
 		if ( ! $cc_featured_image_caption->auto_append() ) {
-			$cc_featured_image_caption->caption( true );
+			echo $cc_featured_image_caption->caption();
 		}
 	} else {
-		return $cc_featured_image_caption->caption( false, $html );
+		return $cc_featured_image_caption->caption( $html );
 	}
 }
 
@@ -64,4 +67,3 @@ function cc_featured_image_caption( $echo = true, $html = true ) {
 function cc_has_featured_image_caption() {
     return true;
 }
-?>

@@ -18,16 +18,16 @@ class Admin extends FeaturedImageCaption {
         $this->admin_initialize();
 
         // Meta box hooks
-        add_action( 'add_meta_boxes', array( &$this, 'metabox') ); // Add meta box
-        add_action( 'save_post', array( &$this, 'save_metabox' ) ); // Save the caption when the post is saved
+        add_action( 'add_meta_boxes', array( $this, 'metabox') ); // Add meta box
+        add_action( 'save_post', array( $this, 'save_metabox' ) ); // Save the caption when the post is saved
 
         // Plugin option hooks
-        add_action( 'admin_menu', array( &$this, 'create_options_menu' ) ); // Add menu entry to Settings menu
-		add_action( 'admin_init', array( &$this, 'options_init' ) ); // Initialize plugin options
+        add_action( 'admin_menu', array( $this, 'create_options_menu' ) ); // Add menu entry to Settings menu
+		add_action( 'admin_init', array( $this, 'options_init' ) ); // Initialize plugin options
 
         // Plugin management hooks
-        register_activation_hook( $this->pluginfile, array( &$this, 'activate' ) ); // Plugin activation
-        register_deactivation_hook( $this->pluginfile, array( &$this, 'deactivate' ) ); // Plugin deactivation
+        register_activation_hook( $this->pluginfile, array( $this, 'activate' ) ); // Plugin activation
+        register_deactivation_hook( $this->pluginfile, array( $this, 'deactivate' ) ); // Plugin deactivation
     }
 
     /*
@@ -51,7 +51,7 @@ class Admin extends FeaturedImageCaption {
             add_meta_box(
                 self::ID, // HTML ID for the meta box
                 self::NAME, // Title of the meta box displayed to the us
-                array( &$this, 'metabox_callback' ), // Callback function for the meta box to display it to the user
+                array( $this, 'metabox_callback' ), // Callback function for the meta box to display it to the user
                 $screen, // Locations where the meta box should be shown
                 'side' // Location where the meta box should be shown. This one is placed on the side.
             );
@@ -176,7 +176,7 @@ class Admin extends FeaturedImageCaption {
 			self::NAME, // Menu title. This is displayed in the Settings submenu.
 			'manage_options', // Capability required to access the options page for this plugin
 			self::ID, // Menu slug
-			array( &$this, 'options_page' ) // Function to render the options page
+			array( $this, 'options_page' ) // Function to render the options page
 		);
 	}
 
@@ -188,22 +188,30 @@ class Admin extends FeaturedImageCaption {
 		register_setting(
 			self::PREFIX . 'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
 			self::PREFIX . 'options', // The name of the plugin options entry in the database.
-			array( &$this, 'options_validate' ) // The callback method to validate plugin options
+			array( $this, 'options_validate' ) // The callback method to validate plugin options
 		);
 
 		// Settings section for Post/Page options
 		add_settings_section(
 			'display', // Name of the section
 			'Display', // Title of the section, displayed on the options page
-			array( &$this, 'display_callback' ), // Callback method to display plugin options
+			array( $this, 'display_callback' ), // Callback method to display plugin options
 			self::ID // Page ID for the options page
 		);
+
+        // Section for plugin debugging
+        add_settings_section(
+            'debug',
+            'Debug',
+            array( $this, 'debug_callback' ),
+            self::ID
+        );
 
 		// Automatically add the caption to the featured image
 		add_settings_field(
 			'auto_append', // Field ID
 			'Automatically add the caption to the featured image', // Field title/label, displayed to the user
-			array( &$this, 'auto_append_callback' ), // Callback method to display the option field
+			array( $this, 'auto_append_callback' ), // Callback method to display the option field
 			self::ID, // Page ID for the options page
 			'display' // Settings section in which to display the field
 		);
@@ -212,7 +220,7 @@ class Admin extends FeaturedImageCaption {
 		add_settings_field(
 			'container', // Field ID
 			'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
-			array( &$this, 'container_callback' ), // Callback method to display the option field
+			array( $this, 'container_callback' ), // Callback method to display the option field
 			self::ID, // Page ID for the options page
 			'display' // Settings section in which to display the field
 		);
@@ -222,7 +230,26 @@ class Admin extends FeaturedImageCaption {
      * Callback for Display settings section.
      */
     function display_callback() {
-        echo '<p>Adjust the way the caption is displayed on your site.';
+        echo '<p>Adjust the way the caption is displayed on your site.</p>';
+    }
+
+    /**
+     * Callback for debugging.
+     */
+    function debug_callback() {
+        echo '<p>Use the information below for debugging. If you are posting in the support forums or on a GitHub issue, please copy and paste everything shown below.</p>';
+
+        // Versioning information
+        echo '<strong>Version Information</strong><br>';
+        echo 'Plugin: ' . self::VERSION . '<br>';
+        echo 'WordPress: ' . get_bloginfo( 'version' ) . '<br>';
+        echo 'PHP: ' . phpversion() . '<br>';
+
+        // Theme information
+        $theme = wp_get_theme();
+        echo '<br><strong>Theme</strong><br>';
+        echo 'Name: <a href="' . $theme->get( 'ThemeURI' ) . '" target="_blank">' . $theme->get( 'Name' ) . '</a><br>';
+        echo 'Version: ' . $theme->get( 'Version' ) . '<br>';
     }
 
     /**
@@ -243,7 +270,7 @@ class Admin extends FeaturedImageCaption {
 
         echo '<input id="' . self::PREFIX . 'options[container]" name="' . self::PREFIX . 'options[container]" type="checkbox"' . $checked . '>';
         echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
-     }
+    }
 
     /**
      * Options page
@@ -310,6 +337,11 @@ class Admin extends FeaturedImageCaption {
         // Check to make sure the version of WordPress being used is compatible with the plugin
         if ( version_compare( get_bloginfo( 'version' ), self::WPVER, '<' ) ) {
             wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
+        }
+
+        // Check to make sure the version of PHP being used is compatible
+        if ( version_compare( phpversion(), self::PHPVER, '<' ) ) {
+            wp_die( 'Your version of PHP is too old. Please upgrade to a newer version of PHP.' );
         }
 
         // Check that the current theme support featured images
@@ -382,5 +414,3 @@ class Admin extends FeaturedImageCaption {
     }
 
 }
-
-?>

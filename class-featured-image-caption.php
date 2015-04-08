@@ -10,12 +10,13 @@ namespace cconover\FeaturedImageCaption;
 
 class FeaturedImageCaption {
     // Plugin constants
-    const ID			= 'cc-featured-image-caption';	// Plugin ID
-    const NAME			= 'Featured Image Caption';		// Plugin name
-    const VERSION		= '0.5.0';						// Plugin version
-    const WPVER			= '3.5';						// Minimum version of WordPress required for this plugin
-    const PREFIX		= 'cc_featured_image_caption_';	// Plugin database prefix
-    const METAPREFIX	= '_cc_featured_image_caption';	// Post meta database prefix
+    const ID			= 'cc-featured-image-caption'; // Plugin ID
+    const NAME			= 'Featured Image Caption'; // Plugin name
+    const VERSION		= '0.6.0'; // Plugin version
+    const WPVER			= '3.5'; // Minimum version of WordPress required for this plugin
+    const PHPVER        = '5.2.4'; // Minimum required version of PHP
+    const PREFIX		= 'cc_featured_image_caption_'; // Plugin database prefix
+    const METAPREFIX	= '_cc_featured_image_caption'; // Post meta database prefix
 
     // Class properties
     protected $options; // Plugin options and settings
@@ -36,7 +37,10 @@ class FeaturedImageCaption {
         $this->pluginfile = $this->pluginpath . 'featured-image-caption.php';
 
         // Hook into post thumbnail
-        add_filter( 'post_thumbnail_html', array( &$this, 'post_thumbnail_filter' ) );
+        add_filter( 'post_thumbnail_html', array( $this, 'post_thumbnail_filter' ) );
+
+        // Shortcode
+        add_shortcode( 'cc-featured-image-caption', array( $this, 'shortcode' ) );
     }
 
     /**
@@ -58,18 +62,63 @@ class FeaturedImageCaption {
     }
 
     /**
+     * Shortcode for displaying caption data.
+     *
+     * @param   array   $atts       Shortcode attributes.
+     *
+     * @return  string  $caption    The output for the shortcode to display.
+     */
+    public function shortcode( $atts ) {
+        // Set up the attributes for use. Since all attributes are boolean by declaration, no defaults are set.
+        $a = shortcode_atts( array(
+            'format'    => 'html',
+        ), $atts );
+
+        // Get the caption data
+        global $post;
+        $captiondata = $this->caption_data( $post->ID );
+
+        var_dump( $a['format'] );
+
+        // Format-specific flags to force format, ordered by presedence
+        do {
+            // Source link
+            if ( $this->has_flag( 'source-link', $atts, false ) ) {
+                $a['format'] = 'html';
+                break;
+            }
+
+            // Source URL
+            if ( $this->has_flag( 'source-url', $atts, false ) ) {
+                $a['format'] = 'plaintext';
+                break;
+            }
+        } while( 0 );
+
+        var_dump( $a['format'] );
+
+        // Select the output format
+        switch ( $a['format'] ) {
+            case "plaintext":
+                $caption = $this->plaintext( $captiondata, $atts );
+                break;
+            default:
+                $caption = $this->html( $captiondata, $atts );
+        }
+
+        return $caption;
+    }
+
+    /**
      * Access and format the caption data.
      *
-     * @param   boolean             $echo       Whether to print the result to the screen. True: print the result. False: return the result. Defaults to false.
      * @param   boolean             $html       Whether the result should be fully-formed HTML. True: create HTML. False: return raw data array.
      *
      * @return  boolean|string      $caption    If successful, returns the requested result. If unsuccessful, returns false.
      */
-    public function caption( $echo = false, $html = true ) {
-        // Get access to the $post object
-        global $post;
-
+    public function caption( $html = true ) {
         // Get the caption data
+        global $post;
         $captiondata = $this->caption_data( $post->ID );
 
         // If there is no caption data, return empty.
@@ -82,28 +131,10 @@ class FeaturedImageCaption {
             return $captiondata;
         }
 
-        // Assemble the HTML
-        $caption = '<span class="' . self::ID . '-text">' . $captiondata['caption_text'] . '</span>';
+        // Get the HTML
+        $caption = $this->html( $captiondata );
 
-        // If the source URL is set, attribution is rendered as a link
-        if ( ! empty( $captiondata['source_url'] ) ) {
-            $new_window = ! empty( $captiondata['new_window'] ) ? ' target="_blank"' : '';
-            $caption .= ' <span class="' . self::ID . '-source"><a href="' . $captiondata['source_url'] . '"' . $new_window . '>' . $captiondata['source_text'] . '</a></span>';
-        } else {
-            $caption .= ' <span class="' . self::ID . '-source">' . $captiondata['source_text'] . '</span>';
-        }
-
-        // If the container <div> is enabled
-        if ( ! empty( $this->options['container'] ) ) {
-            $caption = '<div class="' . self::ID . '">' . $caption . '</div>';
-        }
-
-        // If we don't want to print the result, return it
-        if ( empty( $echo ) ) {
-            return $caption;
-        } else {
-            echo $caption;
-        }
+        return $caption;
     }
 
     /**
@@ -134,6 +165,119 @@ class FeaturedImageCaption {
     }
 
     /**
+     * Assemble the caption HTML.
+     *
+     * @param   array       $captiondata    The caption data for the post retrieved from the database.
+     * @param   array       $atts           The shortcode attributes, from which we determine which caption elements to include.
+     *
+     * @return  string      $caption        The fully assembled caption HTML.
+     */
+    private function html( $captiondata, $atts = array() ) {
+        // Initialize the caption HTML
+        if ( ! empty( $this->options['container'] ) ) {
+            // Start with the container <div>
+            $caption = '<div class="' . self::ID . '">';
+        } else {
+            // Start with an empty string
+            $caption = '';
+        }
+
+        // Caption text
+        if ( $this->has_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
+            $caption .= '<span class="' . self::ID . '-text">' . $captiondata['caption_text'] . '</span>';
+        }
+
+        /* Source attribution */
+        // Only move forward if we have source text. Without that, nothing else is useful.
+        if ( ! empty( $captiondata['source_text'] ) ) {
+            // Source link
+            if ( $this->has_flag( 'source-link', $atts ) && ! empty( $captiondata['source_url'] ) ) {
+                // Whether the link should open in a new window
+                $new_window = ! empty( $captiondata['new_window'] ) ? ' target="_blank"' : '';
+
+                // Source link HTML
+                $caption .= ' <span class="' . self::ID . '-source"><a href="' . $captiondata['source_url'] . '"' . $new_window . '>' . $captiondata['source_text'] . '</a></span>';
+            } elseif ( $this->has_flag( 'source-text', $atts ) ) {
+                // Caption text, no link
+                $caption .= ' <span class="' . self::ID . '-source">' . $captiondata['source_text'] . '</span>';
+            }
+        }
+
+        // Close the HTML if necessary
+        if ( ! empty( $this->options['container'] ) ) {
+            $caption .= '</div>';
+        }
+
+        return $caption;
+    }
+
+    /**
+     * Assemble the caption as plain text.
+     *
+     * @param   array       $captiondata    The caption data for the post retrieved from the database.
+     * @param   array       $atts           The shortcode attributes, from which we determine which caption elements to include.
+     *
+     * @return  string      $caption        The caption plain text.
+     */
+    private function plaintext( $captiondata, $atts = array() ) {
+        // Start with an empty string
+        $caption = '';
+
+        // Since the source URL can't be combined with any other caption data in plain text, we'll start with that.
+        if ( $this->has_flag( 'source-url', $atts, false ) && ! empty( $captiondata['source_url'] ) ) {
+            return $captiondata['source_url'];
+        }
+
+        // Caption text
+        if ( $this->has_flag( 'caption-text', $atts ) && ! empty( $captiondata['caption_text'] ) ) {
+            $caption .= $captiondata['caption_text'];
+        }
+
+        // Source text
+        if ( $this->has_flag( 'source-text', $atts ) && ! empty( $captiondata['source_text'] ) ) {
+            // If the caption text is already part of the caption, we need to put a space before the source text
+            if ( $caption == $captiondata['caption_text'] ) {
+                $caption .= ' ' . $captiondata['source_text'];
+            } else {
+                $caption .= $captiondata['source_text'];
+            }
+        }
+
+        return $caption;
+    }
+
+    /**
+     * Check whether the given flag is set in the shortcode attributes.
+     *
+     * @param   string  $flag   The flag to be checked in the attributes.
+     * @param   array   $atts   The shortcode attributes.
+     * @param   boolean $all    Whether to return true if $atts is empty, causing the flag to be assumed. Default: true.
+     *
+     * @return  boolean $result True if attribute is set or assumed. False if attribute is not set or assumed.
+     */
+    private function has_flag( $flag, $atts, $all = true ) {
+        // If 'format' is set in attributes, remove it
+        if ( ! empty( $atts['format'] ) ) {
+            unset( $atts['format'] );
+        }
+
+        // If no flags are set and $all is true, return true
+        if ( $all && empty( $atts ) ) {
+            return true;
+        }
+
+        // Cycle through all attributes and return true when we find our flag
+        foreach ( $atts as $key => $value ) {
+            if ( is_int( $key ) && $value == $flag ) {
+                return true;
+            }
+        }
+
+        // If nothing has matched
+        return false;
+    }
+
+    /**
      * Check whether automatic caption appending is enabled.
      *
      * @return  boolean     $enabled    Whether the option is enabled.
@@ -147,5 +291,3 @@ class FeaturedImageCaption {
     }
 
 }
-
-?>
