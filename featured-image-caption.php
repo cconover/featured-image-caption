@@ -27,6 +27,8 @@ function cc_featured_image_caption_loader() {
 		require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
 		new \cconover\FeaturedImageCaption\Admin;
 	}
+
+	return $cc_featured_image_caption;
 }
 add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
@@ -43,7 +45,7 @@ add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
  * @return 	mixed
  */
 function cc_featured_image_caption( $echo = true, $html = true ) {
-	global $cc_featured_image_caption;
+	$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
 
 	// If the result should be printed to the screen. $echo and $html MUST both be true.
 	if ( ! empty( $echo ) && ! empty( $html ) ) {
