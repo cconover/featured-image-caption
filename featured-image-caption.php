@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Create plugin object
 function cc_featured_image_caption_loader() {
 	require_once( plugin_dir_path( __FILE__ ) . 'class-featured-image-caption.php' );
-	$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
+	new \cconover\FeaturedImageCaption\FeaturedImageCaption;
 
 	// Admin
 	if ( is_admin() ) {
@@ -27,8 +27,6 @@ function cc_featured_image_caption_loader() {
 		require_once( plugin_dir_path( __FILE__ ) . 'admin/featured-image-caption-admin.php' );
 		new \cconover\FeaturedImageCaption\Admin;
 	}
-
-	return $cc_featured_image_caption;
 }
 add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
@@ -45,16 +43,16 @@ add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
  * @return 	mixed
  */
 function cc_featured_image_caption( $echo = true, $html = true ) {
-	$cc_featured_image_caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
+	$caption = new \cconover\FeaturedImageCaption\FeaturedImageCaption;
 
 	// If the result should be printed to the screen. $echo and $html MUST both be true.
 	if ( ! empty( $echo ) && ! empty( $html ) ) {
 		// If automatic caption appending is disabled
-		if ( ! $cc_featured_image_caption->auto_append() ) {
-			echo $cc_featured_image_caption->caption();
+		if ( ! $caption->auto_append() ) {
+			echo $caption->caption();
 		}
 	} else {
-		return $cc_featured_image_caption->caption( $html );
+		return $caption->caption( $html );
 	}
 }
 
