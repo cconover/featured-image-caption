@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=pl
 Tags: image, caption, featured image
 Requires at least: 3.5
 Tested up to: 4.2
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ Documentation is maintained on [GitHub](https://github.com/cconover/wp-featured-
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.6.1 =
+Fixes a bug introduced in 0.6.0 in the theme function.
 
 = 0.6.0 =
 A shortcode has been added to allow for easy insertion of caption information anywhere in a post.
@@ -67,6 +70,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.6.1 =
+Fixes a bug introduced in 0.6.0 in the theme function.
 
 = 0.6.0 =
 A shortcode has been added for easy insertion of caption information into a post or page. Debugging information is now displayed on the plugin settings page. Minor bug fixes.
