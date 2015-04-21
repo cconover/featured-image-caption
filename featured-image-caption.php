@@ -1,14 +1,13 @@
 <?php
+
 /**
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption-plugin-data
  * Description: Set a caption for the featured image of a post that can be displayed on your site.
- * Version: 0.6.1
+ * Version: 0.6.2
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-plugin-author-uri
- * License: GPLv2
- * @package Cconover
- * @subpackage Featured-image-caption
+ * License: GPLv2.
  **/
 
 // Prevent direct access
@@ -38,8 +37,8 @@ add_action('plugins_loaded', 'cc_featured_image_caption_loader');
  * Use this function to retrieve the caption for the featured image.
  * This function must be used within The Loop.
  *
- * @param boolean $echo Whether to print the results true or return them false (default: true)
- * @param boolean $html Whether the result should be formatted HTML. True: HTML. False: array of caption data.
+ * @param bool $echo Whether to print the results true or return them false (default: true)
+ * @param bool $html Whether the result should be formatted HTML. True: HTML. False: array of caption data.
  *
  * @return mixed
  */
@@ -66,7 +65,7 @@ function cc_featured_image_caption($echo = true, $html = true)
  *
  * Check whether a featured image caption is set.
  *
- * @return boolean
+ * @return bool
  */
 function cc_has_featured_image_caption()
 {

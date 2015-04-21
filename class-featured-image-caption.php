@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Main plugin class
- * @package Cconover
- * @subpackage Featured-image-caption
+ * Main plugin class.
  */
 
 namespace cconover\FeaturedImageCaption;
@@ -13,7 +11,7 @@ class FeaturedImageCaption
     // Plugin constants
     const ID            = 'cc-featured-image-caption'; // Plugin ID
     const NAME          = 'Featured Image Caption'; // Plugin name
-    const VERSION       = '0.6.1'; // Plugin version
+    const VERSION       = '0.6.2'; // Plugin version
     const WPVER         = '3.5'; // Minimum version of WordPress required for this plugin
     const PHPVER        = '5.2.4'; // Minimum required version of PHP
     const PREFIX        = 'cc_featured_image_caption_'; // Plugin database prefix
@@ -26,8 +24,8 @@ class FeaturedImageCaption
     protected $pluginfile; // File path to the main plugin file
 
     /**
-    * Class constructor
-    */
+     * Class constructor.
+     */
     public function __construct()
     {
         // Get plugin options from database
@@ -110,7 +108,7 @@ class FeaturedImageCaption
 
         // Select the output format
         switch ($a['format']) {
-            case "plaintext":
+            case 'plaintext':
                 $caption = $this->plaintext($captiondata, $atts);
                 break;
             default:
@@ -123,10 +121,10 @@ class FeaturedImageCaption
     /**
      * Access and format the caption data.
      *
-     * @param boolean $html Whether the result should be fully-formed HTML.
-     *                      True: create HTML. False: return raw data array.
+     * @param bool $html Whether the result should be fully-formed HTML.
+     *                   True: create HTML. False: return raw data array.
      *
-     * @return boolean|string $caption If successful, returns the requested result. If unsuccessful, returns false.
+     * @return bool|string $caption If successful, returns the requested result. If unsuccessful, returns false.
      */
     public function caption($html = true)
     {
@@ -151,12 +149,12 @@ class FeaturedImageCaption
     }
 
     /**
-    * Retrieve the caption data
-    *
-    * @param integer $id The ID of the post or page for which we need the featured image caption.
-    *
-    * @return boolean|array $caption If successful, the array of caption data. If unsuccessful, return false.
-    */
+     * Retrieve the caption data.
+     *
+     * @param int $id The ID of the post or page for which we need the featured image caption.
+     *
+     * @return bool|array $caption If successful, the array of caption data. If unsuccessful, return false.
+     */
     private function caption_data($id)
     {
         // Get the caption data from the post meta
@@ -265,11 +263,11 @@ class FeaturedImageCaption
     /**
      * Check whether the given flag is set in the shortcode attributes.
      *
-     * @param string  $flag The flag to be checked in the attributes.
-     * @param array   $atts The shortcode attributes.
-     * @param boolean $all  Whether to return true if $atts is empty, causing the flag to be assumed. Default: true.
+     * @param string $flag The flag to be checked in the attributes.
+     * @param array  $atts The shortcode attributes.
+     * @param bool   $all  Whether to return true if $atts is empty, causing the flag to be assumed. Default: true.
      *
-     * @return boolean $result True if attribute is set or assumed. False if attribute is not set or assumed.
+     * @return bool $result True if attribute is set or assumed. False if attribute is not set or assumed.
      */
     private function has_flag($flag, $atts, $all = true)
     {
@@ -297,7 +295,7 @@ class FeaturedImageCaption
     /**
      * Check whether automatic caption appending is enabled.
      *
-     * @return boolean $enabled    Whether the option is enabled.
+     * @return bool $enabled    Whether the option is enabled.
      */
     public function auto_append()
     {
