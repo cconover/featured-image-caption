@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Primary admin class for Featured Image Caption
- * @package cconover
- * @subpackage featured-image-caption
+ * Primary admin class for Featured Image Caption.
  */
 
 namespace cconover\FeaturedImageCaption;
@@ -19,16 +17,16 @@ class Admin extends FeaturedImageCaption
         $this->admin_initialize();
 
         // Meta box hooks
-        add_action('add_meta_boxes', array( $this, 'metabox')); // Add meta box
-        add_action('save_post', array( $this, 'save_metabox' )); // Save the caption when the post is saved
+        add_action('add_meta_boxes', array($this, 'metabox')); // Add meta box
+        add_action('save_post', array($this, 'save_metabox')); // Save the caption when the post is saved
 
         // Plugin option hooks
-        add_action('admin_menu', array( $this, 'create_options_menu' )); // Add menu entry to Settings menu
-        add_action('admin_init', array( $this, 'options_init' )); // Initialize plugin options
+        add_action('admin_menu', array($this, 'create_options_menu')); // Add menu entry to Settings menu
+        add_action('admin_init', array($this, 'options_init')); // Initialize plugin options
 
         // Plugin management hooks
-        register_activation_hook($this->pluginfile, array( $this, 'activate' )); // Plugin activation
-        register_deactivation_hook($this->pluginfile, array( $this, 'deactivate' )); // Plugin deactivation
+        register_activation_hook($this->pluginfile, array($this, 'activate')); // Plugin activation
+        register_deactivation_hook($this->pluginfile, array($this, 'deactivate')); // Plugin deactivation
     }
 
     /*
@@ -41,19 +39,19 @@ class Admin extends FeaturedImageCaption
     */
 
     /**
-    * Create the meta box
-    */
+     * Create the meta box.
+     */
     public function metabox()
     {
         // Specify the screens where the meta box should be available
-        $screens = apply_filters('cc_featured_image_caption_screens', array( 'post', 'page' ));
+        $screens = apply_filters('cc_featured_image_caption_screens', array('post', 'page'));
 
         // Iterate through the specified screens to add the meta box
         foreach ($screens as $screen) {
             add_meta_box(
                 self::ID, // HTML ID for the meta box
                 self::NAME, // Title of the meta box displayed to the us
-                array( $this, 'metabox_callback' ), // Callback function for the meta box to display it to the user
+                array($this, 'metabox_callback'), // Callback function for the meta box to display it to the user
                 $screen, // Locations where the meta box should be shown
                 'side' // Location where the meta box should be shown. This one is placed on the side.
             );
@@ -61,8 +59,8 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-    * Featured image caption meta box callback
-    */
+     * Featured image caption meta box callback.
+     */
     public function metabox_callback($post)
     {
         // Add a nonce field to verify data submissions came from our site
@@ -83,12 +81,12 @@ class Admin extends FeaturedImageCaption
         echo '<strong>Source Attribution</strong><br>';
         echo '<label for="'.self::PREFIX.'source_text">Text</label><input type="text" style="width: 100%;" id="'.self::PREFIX.'source_text" name="'.self::PREFIX.'source_text" value="'.(! empty($caption['source_text']) ? $caption['source_text'] : null).'">';
         echo '<label for="'.self::PREFIX.'source_url">URL</label><input type="text" style="width: 100%;" id="'.self::PREFIX.'source_url" name="'.self::PREFIX.'source_url" value="'.(! empty($caption['source_url']) ? $caption['source_url'] : null).'">';
-        echo '<input type="checkbox" name="'.self::PREFIX.'new_window" value="1"'.($this->new_window_checked($caption) ? " checked" : null).'><label for="'.self::PREFIX.'new_window">Open in new window</label>';
+        echo '<input type="checkbox" name="'.self::PREFIX.'new_window" value="1"'.($this->new_window_checked($caption) ? ' checked' : null).'><label for="'.self::PREFIX.'new_window">Open in new window</label>';
     }
 
     /**
-    * Save the meta box data
-    */
+     * Save the meta box data.
+     */
     public function save_metabox($post_id)
     {
         /*
@@ -117,9 +115,9 @@ class Admin extends FeaturedImageCaption
         // Now that we've validated nonce and permissions, let's save the caption data
         // Sanitize the caption
         $caption = array(
-            'caption_text'    => wp_kses_post($_POST[self::PREFIX.'caption_text']),
-            'source_text'    => sanitize_text_field($_POST[self::PREFIX.'source_text']),
-            'source_url'    => esc_url_raw($_POST[self::PREFIX.'source_url']),
+            'caption_text'    => esc_attr(wp_kses_post($_POST[self::PREFIX.'caption_text'])),
+            'source_text'    => esc_attr(sanitize_text_field($_POST[self::PREFIX.'source_text'])),
+            'source_url'    => esc_url($_POST[self::PREFIX.'source_url']),
             'new_window'    => (! empty($_POST[self::PREFIX.'new_window']) ? true : false),
         );
 
@@ -131,10 +129,11 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-     * Whether the "new window" checkbox should be checked
+     * Whether the "new window" checkbox should be checked.
+     *
      * @param array $caption The caption data
      *
-     * @return boolean
+     * @return bool
      */
     private function new_window_checked($caption)
     {
@@ -170,7 +169,7 @@ class Admin extends FeaturedImageCaption
     */
 
     /**
-     * Create the menu entry under the Settings menu
+     * Create the menu entry under the Settings menu.
      */
     public function create_options_menu()
     {
@@ -179,12 +178,12 @@ class Admin extends FeaturedImageCaption
             self::NAME, // Menu title. This is displayed in the Settings submenu.
             'manage_options', // Capability required to access the options page for this plugin
             self::ID, // Menu slug
-            array( $this, 'options_page' ) // Function to render the options page
+            array($this, 'options_page') // Function to render the options page
         );
     }
 
     /**
-     * Initialize plugin options
+     * Initialize plugin options.
      */
     public function options_init()
     {
@@ -192,14 +191,14 @@ class Admin extends FeaturedImageCaption
         register_setting(
             self::PREFIX.'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
             self::PREFIX.'options', // The name of the plugin options entry in the database.
-            array( $this, 'options_validate' ) // The callback method to validate plugin options
+            array($this, 'options_validate') // The callback method to validate plugin options
         );
 
         // Settings section for Post/Page options
         add_settings_section(
             'display', // Name of the section
             'Display', // Title of the section, displayed on the options page
-            array( $this, 'display_callback' ), // Callback method to display plugin options
+            array($this, 'display_callback'), // Callback method to display plugin options
             self::ID // Page ID for the options page
         );
 
@@ -207,7 +206,7 @@ class Admin extends FeaturedImageCaption
         add_settings_section(
             'debug',
             'Debug',
-            array( $this, 'debug_callback' ),
+            array($this, 'debug_callback'),
             self::ID
         );
 
@@ -215,7 +214,7 @@ class Admin extends FeaturedImageCaption
         add_settings_field(
             'auto_append', // Field ID
             'Automatically add the caption to the featured image', // Field title/label, displayed to the user
-            array( $this, 'auto_append_callback' ), // Callback method to display the option field
+            array($this, 'auto_append_callback'), // Callback method to display the option field
             self::ID, // Page ID for the options page
             'display' // Settings section in which to display the field
         );
@@ -224,7 +223,7 @@ class Admin extends FeaturedImageCaption
         add_settings_field(
             'container', // Field ID
             'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
-            array( $this, 'container_callback' ), // Callback method to display the option field
+            array($this, 'container_callback'), // Callback method to display the option field
             self::ID, // Page ID for the options page
             'display' // Settings section in which to display the field
         );
@@ -276,7 +275,7 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-     * Callback for container <div>
+     * Callback for container <div>.
      */
     public function container_callback()
     {
@@ -287,7 +286,7 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-     * Options page
+     * Options page.
      */
     public function options_page()
     {
@@ -341,7 +340,7 @@ class Admin extends FeaturedImageCaption
     */
 
     /**
-     * Admin initialization
+     * Admin initialization.
      */
     public function admin_initialize()
     {
@@ -350,8 +349,8 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-    * Plugin activation
-    */
+     * Plugin activation.
+     */
     public function activate()
     {
         // Check to make sure the version of WordPress being used is compatible with the plugin
@@ -381,8 +380,8 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-    * Plugin deactivation
-    */
+     * Plugin deactivation.
+     */
     public function deactivate()
     {
         // Remove the plugin options from the database
@@ -390,7 +389,7 @@ class Admin extends FeaturedImageCaption
     }
 
     /**
-     * Plugin upgrade
+     * Plugin upgrade.
      */
     private function upgrade()
     {
