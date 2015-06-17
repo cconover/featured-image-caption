@@ -1,15 +1,27 @@
-.htaccess
-wp-content/uploads/
-wp-content/blogs.dir/
-wp-content/upgrade/
+################################################################################
+#
+# Git ignore list
+#
+################################################################################
+
+# Directories
+vendor/
 wp-content/backup-db/
-wp-content/advanced-cache.php
-wp-content/wp-cache-config.php
-sitemap.xml
-*.log
-wp-content/cache/
 wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+
+# Files
+*.log
+sitemap.xml
 sitemap.xml.gz
 wp-config.php
-Thumbs.db
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# System
 .DS_Store
+.htaccess
+Thumbs.db
