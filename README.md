@@ -1,5 +1,6 @@
-Featured Image Caption
-======================
+# Featured Image Caption
+[![Build Status](https://travis-ci.org/cconover/wp-featured-image-caption.svg?branch=master)](https://travis-ci.org/cconover/wp-featured-image-caption)
+
 Featured Image Caption makes it simple to show a caption with the featured image of a post or page. It works seamlessly with most themes, with no coding required. If you like to mess about in the code, it supports that too.
 
 # Installation
