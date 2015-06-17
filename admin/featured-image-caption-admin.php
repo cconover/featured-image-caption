@@ -116,7 +116,7 @@ class Admin extends FeaturedImageCaption
         // Sanitize the caption
         $caption = array(
             'caption_text'    => wp_kses_post($_POST[self::PREFIX.'caption_text']),
-            'source_text'    => esc_attr(sanitize_text_field($_POST[self::PREFIX.'source_text'])),
+            'source_text'    => wp_kses_post($_POST[self::PREFIX.'source_text']),
             'source_url'    => esc_url($_POST[self::PREFIX.'source_url']),
             'new_window'    => (! empty($_POST[self::PREFIX.'new_window']) ? true : false),
         );
