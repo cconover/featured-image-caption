@@ -45,10 +45,10 @@ class Hooks {
         $manage = new Manage();
 
         // Plugin activation
-        register_activation_hook( CCFAC_PATH, array( $manage, 'activate' ) );
+        register_activation_hook( CCFIC_PATH, array( $manage, 'activate' ) );
 
         // Plugin deactivation
-        register_deactivation_hook( CCFAC_PATH, array( $manage, 'deactivate' ) );
+        register_deactivation_hook( CCFIC_PATH, array( $manage, 'deactivate' ) );
     }
 
     /**

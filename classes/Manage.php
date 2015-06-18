@@ -27,7 +27,7 @@ class Manage {
     public function activate()
     {
         // Check to make sure the version of WordPress being used is compatible with the plugin
-        if (version_compare(get_bloginfo('version'), CCFAC_WPVER, '<')) {
+        if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
             wp_die('Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.');
         }
 
@@ -38,12 +38,12 @@ class Manage {
 
         // Default plugin options
         $options = new \stdClass();
-        $options->version = CCFAC_VERSION; // Current plugin version
+        $options->version = CCFIC_VERSION; // Current plugin version
         $options->auto_append = true; // Automatically append caption to featured image
         $options->container = true; // Wrap the caption HTML in a container div
 
         // Add options to database
-        $result = add_option(CCFAC_PREFIX.'options', $options);
+        $result = add_option(CCFIC_PREFIX.'options', $options);
 
         return $result;
     }
@@ -56,7 +56,7 @@ class Manage {
     public function deactivate()
     {
         // Remove the plugin options from the database
-        $result = delete_option(CCFAC_PREFIX.'options');
+        $result = delete_option(CCFIC_PREFIX.'options');
 
         return $result;
     }
@@ -69,7 +69,7 @@ class Manage {
     private function upgrade()
     {
         // Get the plugin options
-        $options = get_option(CCFAC_PREFIX.'options');
+        $options = get_option(CCFIC_PREFIX.'options');
 
         // If the option does not exist, return
         if ( ! $options ) {
@@ -106,7 +106,7 @@ class Manage {
         the current plugin version number, or whether there is no plugin version
         saved in the database.
         */
-        if (! empty($version) && version_compare($version, CCFAC_VERSION, '<')) {
+        if (! empty($version) && version_compare($version, CCFIC_VERSION, '<')) {
             /* === UPGRADE ACTIONS === (oldest to latest) */
 
             // Version 0.5.0
@@ -160,10 +160,10 @@ class Manage {
 
             /* LAST STEPS ALWAYS!!! Update the plugin version saved in the database */
             // Set the value of the plugin version
-            $options->version = CCFAC_VERSION;
+            $options->version = CCFIC_VERSION;
 
             // Save to the database
-            $result = update_option(CCFAC_PREFIX.'options', $options);
+            $result = update_option(CCFIC_PREFIX.'options', $options);
 
             return $result;
         }

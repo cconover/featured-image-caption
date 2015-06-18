@@ -19,7 +19,7 @@ class Option {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFAC_PREFIX.'options' );
+        $this->options = get_option( CCFIC_PREFIX.'options' );
     }
 
     /**
@@ -28,10 +28,10 @@ class Option {
     public function create_options_menu()
     {
         add_options_page(
-            CCFAC_NAME, // Page title. This is displayed in the browser title bar.
-            CCFAC_NAME, // Menu title. This is displayed in the Settings submenu.
+            CCFIC_NAME, // Page title. This is displayed in the browser title bar.
+            CCFIC_NAME, // Menu title. This is displayed in the Settings submenu.
             'manage_options', // Capability required to access the options page for this plugin
-            CCFAC_ID, // Menu slug
+            CCFIC_ID, // Menu slug
             array($this, 'options_page') // Function to render the options page
         );
     }
@@ -43,8 +43,8 @@ class Option {
     {
         // Register the plugin options call and the sanitation callback
         register_setting(
-            CCFAC_PREFIX.'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
-            CCFAC_PREFIX.'options', // The name of the plugin options entry in the database.
+            CCFIC_PREFIX.'options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
+            CCFIC_PREFIX.'options', // The name of the plugin options entry in the database.
             array($this, 'options_validate') // The callback method to validate plugin options
         );
 
@@ -53,7 +53,7 @@ class Option {
             'display', // Name of the section
             'Display', // Title of the section, displayed on the options page
             array($this, 'display_callback'), // Callback method to display plugin options
-            CCFAC_ID // Page ID for the options page
+            CCFIC_ID // Page ID for the options page
         );
 
         // Section for plugin debugging
@@ -61,7 +61,7 @@ class Option {
             'debug',
             'Debug',
             array($this, 'debug_callback'),
-            CCFAC_ID
+            CCFIC_ID
         );
 
         // Automatically add the caption to the featured image
@@ -69,7 +69,7 @@ class Option {
             'auto_append', // Field ID
             'Automatically add the caption to the featured image', // Field title/label, displayed to the user
             array($this, 'auto_append_callback'), // Callback method to display the option field
-            CCFAC_ID, // Page ID for the options page
+            CCFIC_ID, // Page ID for the options page
             'display' // Settings section in which to display the field
         );
 
@@ -78,7 +78,7 @@ class Option {
             'container', // Field ID
             'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
             array($this, 'container_callback'), // Callback method to display the option field
-            CCFAC_ID, // Page ID for the options page
+            CCFIC_ID, // Page ID for the options page
             'display' // Settings section in which to display the field
         );
     }
@@ -104,7 +104,7 @@ class Option {
 
         // Versioning information
         echo '<strong>Version Information</strong><br>';
-        echo 'Plugin: '.CCFAC_VERSION.'<br>';
+        echo 'Plugin: '.CCFIC_VERSION.'<br>';
         echo 'WordPress: '.get_bloginfo('version').'<br>';
         echo 'PHP: '.phpversion().'<br>';
 
@@ -124,7 +124,7 @@ class Option {
     {
         $checked = (! empty($this->options->auto_append)) ? ' checked' : null;
 
-        echo '<input id="'.CCFAC_PREFIX.'options[auto_append]" name="'.CCFAC_PREFIX.'options[auto_append]" type="checkbox"'.$checked.'>';
+        echo '<input id="'.CCFIC_PREFIX.'options[auto_append]" name="'.CCFIC_PREFIX.'options[auto_append]" type="checkbox"'.$checked.'>';
         echo '<p class="description"><strong>Recommended.</strong> Automatically display the caption data you set for the featured image wherever the featured image is displayed. You do not have to make any modifications to your theme files. If you don\'t know what this means or why you wouldn\'t want this enabled, leave it checked.</p>';
     }
 
@@ -135,7 +135,7 @@ class Option {
     {
         $checked = (! empty($this->options->container)) ? ' checked' : null;
 
-        echo '<input id="'.CCFAC_PREFIX.'options[container]" name="'.CCFAC_PREFIX.'options[container]" type="checkbox"'.$checked.'>';
+        echo '<input id="'.CCFIC_PREFIX.'options[container]" name="'.CCFIC_PREFIX.'options[container]" type="checkbox"'.$checked.'>';
         echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
     }
 
@@ -152,13 +152,13 @@ class Option {
         <div class="wrap">
             <?php screen_icon();
         ?>
-            <h2><?php echo CCFAC_NAME;
+            <h2><?php echo CCFIC_NAME;
         ?></h2>
 
             <form action="options.php" method="post">
                 <?php
-                settings_fields(CCFAC_PREFIX.'options_fields');
-        do_settings_sections(CCFAC_ID);
+                settings_fields(CCFIC_PREFIX.'options_fields');
+        do_settings_sections(CCFIC_ID);
         submit_button();
         ?>
             </form>
@@ -186,7 +186,7 @@ class Option {
 
             // If the version number is missing, add it
             if ( empty( $options->version ) ) {
-                $options->version = CCFAC_VERSION;
+                $options->version = CCFIC_VERSION;
             }
         }
 
