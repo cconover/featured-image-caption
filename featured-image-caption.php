@@ -4,7 +4,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
  * Description: Set a caption for the featured image of a post that can be displayed on your site.
- * Version: 0.7.1
+ * Version: 0.7.2
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
  * License: GPLv2.
