@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=pl
 Tags: image, caption, featured image
 Requires at least: 3.5
 Tested up to: 4.2.2
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ Documentation is maintained on [GitHub](https://github.com/cconover/wp-featured-
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.7.1 =
+Fixes missing dependency.
 
 = 0.7.0 =
 Fixes bug in handling HTML tags in caption data that was introduced in the last release. Bug fixes related to activation.
@@ -79,6 +82,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.7.1 =
+Fixes missing dependency.
 
 = 0.7.0 =
 Fixes bug in handling HTML tags in caption data that was introduced in the last release. Bug fixes related to activation.

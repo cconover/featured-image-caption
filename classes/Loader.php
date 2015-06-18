@@ -30,7 +30,7 @@ class Loader {
         }
         // Plugin version
         if ( ! defined( 'CCFAC_VERSION' ) ) {
-            define( 'CCFAC_VERSION', '0.7.0' );
+            define( 'CCFAC_VERSION', '0.7.1' );
         }
         // Minimum required version of WordPress
         if ( ! defined( 'CCFAC_WPVER' ) ) {
