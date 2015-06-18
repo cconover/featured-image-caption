@@ -20,8 +20,8 @@ class MetaBox {
         // Iterate through the specified screens to add the meta box
         foreach ($screens as $screen) {
             add_meta_box(
-                CCFAC_ID, // HTML ID for the meta box
-                CCFAC_NAME, // Title of the meta box displayed to the us
+                CCFIC_ID, // HTML ID for the meta box
+                CCFIC_NAME, // Title of the meta box displayed to the us
                 array($this, 'metabox_callback'), // Callback function for the meta box to display it to the user
                 $screen, // Locations where the meta box should be shown
                 'side' // Location where the meta box should be shown. This one is placed on the side.
@@ -35,10 +35,10 @@ class MetaBox {
     public function metabox_callback($post)
     {
         // Add a nonce field to verify data submissions came from our site
-        wp_nonce_field(CCFAC_ID, CCFAC_PREFIX.'nonce');
+        wp_nonce_field(CCFIC_ID, CCFIC_PREFIX.'nonce');
 
         // Retrieve the current caption as a string, if set
-        $caption = get_post_meta($post->ID, CCFAC_METAPREFIX, true);
+        $caption = get_post_meta($post->ID, CCFIC_METAPREFIX, true);
 
         // If the data is a string, convert it to an array (legacy data support)
         if (is_string($caption)) {
@@ -47,12 +47,12 @@ class MetaBox {
             );
         }
 
-        echo '<label for="'.CCFAC_PREFIX.'caption_text">Caption text</label><textarea style="width: 100%; max-width: 100%;" id="'.CCFAC_PREFIX.'caption_text" name="'.CCFAC_PREFIX.'caption_text">'.(! empty($caption['caption_text']) ? esc_attr($caption['caption_text']) : null).'</textarea>';
+        echo '<label for="'.CCFIC_PREFIX.'caption_text">Caption text</label><textarea style="width: 100%; max-width: 100%;" id="'.CCFIC_PREFIX.'caption_text" name="'.CCFIC_PREFIX.'caption_text">'.(! empty($caption['caption_text']) ? esc_attr($caption['caption_text']) : null).'</textarea>';
         echo '<br><br>';
         echo '<strong>Source Attribution</strong><br>';
-        echo '<label for="'.CCFAC_PREFIX.'source_text">Text</label><input type="text" style="width: 100%;" id="'.CCFAC_PREFIX.'source_text" name="'.CCFAC_PREFIX.'source_text" value="'.(! empty($caption['source_text']) ? esc_attr($caption['source_text']) : null).'">';
-        echo '<label for="'.CCFAC_PREFIX.'source_url">URL</label><input type="text" style="width: 100%;" id="'.CCFAC_PREFIX.'source_url" name="'.CCFAC_PREFIX.'source_url" value="'.(! empty($caption['source_url']) ? $caption['source_url'] : null).'">';
-        echo '<input type="checkbox" name="'.CCFAC_PREFIX.'new_window" value="1"'.($this->new_window_checked($caption) ? ' checked' : null).'><label for="'.CCFAC_PREFIX.'new_window">Open in new window</label>';
+        echo '<label for="'.CCFIC_PREFIX.'source_text">Text</label><input type="text" style="width: 100%;" id="'.CCFIC_PREFIX.'source_text" name="'.CCFIC_PREFIX.'source_text" value="'.(! empty($caption['source_text']) ? esc_attr($caption['source_text']) : null).'">';
+        echo '<label for="'.CCFIC_PREFIX.'source_url">URL</label><input type="text" style="width: 100%;" id="'.CCFIC_PREFIX.'source_url" name="'.CCFIC_PREFIX.'source_url" value="'.(! empty($caption['source_url']) ? $caption['source_url'] : null).'">';
+        echo '<input type="checkbox" name="'.CCFIC_PREFIX.'new_window" value="1"'.($this->new_window_checked($caption) ? ' checked' : null).'><label for="'.CCFIC_PREFIX.'new_window">Open in new window</label>';
     }
 
     /**
@@ -65,7 +65,7 @@ class MetaBox {
         If it wasn't, return the post ID and be on our way.
         */
         // If no nonce was provided or the nonce does not match
-        if (! isset($_POST[CCFAC_PREFIX.'nonce']) || ! wp_verify_nonce($_POST[CCFAC_PREFIX.'nonce'], CCFAC_ID)) {
+        if (! isset($_POST[CCFIC_PREFIX.'nonce']) || ! wp_verify_nonce($_POST[CCFIC_PREFIX.'nonce'], CCFIC_ID)) {
             return $post_id;
         }
 
@@ -86,17 +86,17 @@ class MetaBox {
         // Now that we've validated nonce and permissions, let's save the caption data
         // Sanitize the caption
         $caption = array(
-            'caption_text'    => $_POST[CCFAC_PREFIX.'caption_text'],
-            'source_text'    => $_POST[CCFAC_PREFIX.'source_text'],
-            'source_url'    => esc_url($_POST[CCFAC_PREFIX.'source_url']),
-            'new_window'    => (! empty($_POST[CCFAC_PREFIX.'new_window']) ? true : false),
+            'caption_text'    => $_POST[CCFIC_PREFIX.'caption_text'],
+            'source_text'    => $_POST[CCFIC_PREFIX.'source_text'],
+            'source_url'    => esc_url($_POST[CCFIC_PREFIX.'source_url']),
+            'new_window'    => (! empty($_POST[CCFIC_PREFIX.'new_window']) ? true : false),
         );
 
         // Update the caption meta field
-        update_post_meta($post_id, CCFAC_METAPREFIX, $caption);
+        update_post_meta($post_id, CCFIC_METAPREFIX, $caption);
 
         // Update the user default for the "new window" checkbox
-        update_user_option(get_current_user_id(), CCFAC_PREFIX.'new_window', $caption['new_window']);
+        update_user_option(get_current_user_id(), CCFIC_PREFIX.'new_window', $caption['new_window']);
     }
 
     /**
@@ -118,7 +118,7 @@ class MetaBox {
         }
         // If not set, look for the user option
         else {
-            $new_window = get_user_option(CCFAC_PREFIX.'new_window', get_current_user_id());
+            $new_window = get_user_option(CCFIC_PREFIX.'new_window', get_current_user_id());
 
             if ($new_window) {
                 return true;

@@ -27,8 +27,8 @@ if( version_compare( phpversion(), '5.3', '<' ) ) {
  */
 function cc_featured_image_caption_loader() {
     // Define the path to this file
-    if ( ! defined( 'CCFAC_PATH' ) ) {
-        define( 'CCFAC_PATH', __FILE__ );
+    if ( ! defined( 'CCFIC_PATH' ) ) {
+        define( 'CCFIC_PATH', __FILE__ );
     }
 
     // Composer autoloader

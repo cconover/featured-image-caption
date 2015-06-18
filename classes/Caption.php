@@ -19,7 +19,7 @@ class Caption {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFAC_PREFIX.'options' );
+        $this->options = get_option( CCFIC_PREFIX.'options' );
     }
 
     /**
@@ -62,7 +62,7 @@ class Caption {
     private function caption_data($id)
     {
         // Get the caption data from the post meta
-        $caption = get_post_meta($id, CCFAC_METAPREFIX, true);
+        $caption = get_post_meta($id, CCFIC_METAPREFIX, true);
 
         // If caption data is not present, return false
         if (empty($caption)) {
@@ -101,7 +101,7 @@ class Caption {
         // Initialize the caption HTML
         if (! empty($this->options->container)) {
             // Start with the container <div>
-            $caption = '<div class="'.CCFAC_ID.'">';
+            $caption = '<div class="'.CCFIC_ID.'">';
         } else {
             // Start with an empty string
             $caption = '';
@@ -112,7 +112,7 @@ class Caption {
 
         // Caption text
         if ($shortcode->has_flag('caption-text', $atts) && ! empty($captiondata['caption_text'])) {
-            $caption .= '<span class="'.CCFAC_ID.'-text">'.$captiondata['caption_text'].'</span>';
+            $caption .= '<span class="'.CCFIC_ID.'-text">'.$captiondata['caption_text'].'</span>';
         }
 
         /* Source attribution */
@@ -124,10 +124,10 @@ class Caption {
                 $new_window = ! empty($captiondata['new_window']) ? ' target="_blank"' : '';
 
                 // Source link HTML
-                $caption .= ' <span class="'.CCFAC_ID.'-source"><a href="'.$captiondata['source_url'].'"'.$new_window.'>'.$captiondata['source_text'].'</a></span>';
+                $caption .= ' <span class="'.CCFIC_ID.'-source"><a href="'.$captiondata['source_url'].'"'.$new_window.'>'.$captiondata['source_text'].'</a></span>';
             } elseif ($shortcode->has_flag('source-text', $atts)) {
                 // Caption text, no link
-                $caption .= ' <span class="'.CCFAC_ID.'-source">'.$captiondata['source_text'].'</span>';
+                $caption .= ' <span class="'.CCFIC_ID.'-source">'.$captiondata['source_text'].'</span>';
             }
         }
 
