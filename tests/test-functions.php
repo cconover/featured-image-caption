@@ -5,15 +5,6 @@
 
 class FunctionsTest extends WP_UnitTestCase {
     /**
-     * Plugin loader
-     */
-    function test_loader() {
-        $test = cc_featured_image_caption_loader();
-
-        $this->assertNull( $test );
-    }
-
-    /**
      * Caption set check
      * Should always return true, as this function is deprecated
      */
