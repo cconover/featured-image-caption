@@ -175,6 +175,21 @@ class Option {
         // Set local variable for plugin options stored in the database
         $options = $this->options;
 
+        // If the options are stored as an array, convert them to an object
+        if ( is_array( $options ) ) {
+            $options_obj = new \stdClass();
+            foreach ( $options as $key => $value ) {
+                $options_obj->$key = $value;
+            }
+
+            $options = $options_obj;
+
+            // If the version number is missing, add it
+            if ( empty( $options->version ) ) {
+                $options->version = CCFAC_VERSION;
+            }
+        }
+
         // Set the values to store in the database for each of the options
         $options->auto_append = (! empty($input['auto_append'])) ? true : false;
         $options->container = (! empty($input['container'])) ? true : false;
