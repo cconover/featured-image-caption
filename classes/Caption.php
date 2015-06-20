@@ -19,7 +19,7 @@ class Caption {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFIC_PREFIX.'options' );
+        $this->options = get_option( CCFIC_KEY.'_options' );
     }
 
     /**
@@ -62,7 +62,7 @@ class Caption {
     public function caption_data($id)
     {
         // Get the caption data from the post meta
-        $caption = get_post_meta($id, CCFIC_METAPREFIX, true);
+        $caption = get_post_meta($id, '_'.CCFIC_KEY, true);
 
         // If caption data is not present, return false
         if (empty($caption)) {
