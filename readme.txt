@@ -33,6 +33,9 @@ Documentation is maintained on [GitHub](https://github.com/cconover/wp-featured-
 
 == Upgrade Notice ==
 
+= 0.8.0 =
+NOTICE: Changes the shortcode name and fixes bugs in the shortcode. PLEASE check the changelog for this version to see how this affects you.
+
 = 0.7.2 =
 Fixes a bug in upgrading plugin options.
 
@@ -85,6 +88,10 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.0 =
+* Changes the name of the shortcode from `cc-featured-image-caption` to `ccfic`. This was done for a few reasons. First, WordPress documentation advises against hyphens in shortcode names, so in order to follow best practices the hyphens have been removed. Second, it's easier to type the abbreviation when using the shortcode. Please note, the old shortcode name still works for now, but you should expect that it will be removed entirely by the time this plugin reaches its 1.0.0 release. As such, please update all the locations that you use the shortcode. Please see the [shortcode documentation](https://github.com/cconover/wp-featured-image-caption/wiki/Shortcode) for usage information.
+* Fixes the activation process so that initial configuration is saved properly in the database.
 
 = 0.7.2 =
 Fixes a bug in upgrading plugin options.
