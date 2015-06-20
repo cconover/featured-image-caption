@@ -4,7 +4,7 @@
  * Plugin Name: Featured Image Caption
  * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
  * Description: Set a caption for the featured image of a post that can be displayed on your site.
- * Version: 0.7.2
+ * Version: 0.8.0
  * Author: Christiaan Conover
  * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
  * License: GPLv2.
@@ -35,7 +35,7 @@ function cc_featured_image_caption_loader() {
     require_once 'vendor/autoload.php';
 
     // Instantiate the plugin
-    new \cconover\FeaturedImageCaption\Loader();
+    new \cconover\FeaturedImageCaption\Bootstrap();
 }
 add_action('plugins_loaded', 'cc_featured_image_caption_loader');
 
@@ -52,16 +52,15 @@ add_action('plugins_loaded', 'cc_featured_image_caption_loader');
  * @return string The formatted caption.
  */
 function cc_featured_image_caption( $echo = true, $html = true ) {
-    $caption = new \cconover\FeaturedImageCaption\Caption();
+    // Call the caption data using the shortcode
+    $format = $html ? '' : ' format="plaintext"';
+    $caption = do_shortcode( '[ccfic'.$format.']');
 
-    // If the result should be printed to the screen. $echo and $html MUST both be true.
-    if ( ! empty( $echo ) && ! empty( $html ) ) {
-        // If automatic caption appending is disabled
-        if ( ! $caption->auto_append() ) {
-            echo $caption->caption();
-        }
+    // If the result should be printed to the screen.
+    if ( $echo ) {
+        echo $caption;
     } else {
-        return $caption->caption( $html );
+        return $caption;
     }
 }
 
