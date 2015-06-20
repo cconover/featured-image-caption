@@ -96,6 +96,9 @@ class Hooks {
         $shortcode = new Shortcode();
 
         // Register the shortcode
+        add_shortcode( 'ccfic', array( $shortcode, 'shortcode' ) );
+
+        // DEPRECATED shortcode because hyphens are to be avoided.
         add_shortcode( 'cc-featured-image-caption', array( $shortcode, 'shortcode' ) );
     }
 

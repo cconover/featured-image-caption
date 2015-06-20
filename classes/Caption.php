@@ -28,7 +28,7 @@ class Caption {
      * @param bool $html Whether the result should be fully-formed HTML.
      *                   True: create HTML. False: return raw data array.
      *
-     * @return bool|string $caption If successful, returns the requested result. If unsuccessful, returns false.
+     * @return array|null|string If successful, returns the requested result. If unsuccessful, returns null.
      */
     public function caption($html = true)
     {
@@ -59,7 +59,7 @@ class Caption {
      *
      * @return bool|array $caption If successful, the array of caption data. If unsuccessful, return false.
      */
-    private function caption_data($id)
+    public function caption_data($id)
     {
         // Get the caption data from the post meta
         $caption = get_post_meta($id, CCFIC_METAPREFIX, true);
@@ -96,7 +96,7 @@ class Caption {
      *
      * @return string $caption        The fully assembled caption HTML.
      */
-    private function html($captiondata, $atts = array())
+    public function html($captiondata, $atts = array())
     {
         // Initialize the caption HTML
         if (! empty($this->options->container)) {
@@ -147,7 +147,7 @@ class Caption {
      *
      * @return string $caption        The caption plain text.
      */
-    private function plaintext($captiondata, $atts = array())
+    public function plaintext($captiondata, $atts = array())
     {
         // Start with an empty string
         $caption = '';

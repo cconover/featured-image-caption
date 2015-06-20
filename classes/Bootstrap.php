@@ -8,7 +8,7 @@
 
 namespace cconover\FeaturedImageCaption;
 
-class Loader {
+class Bootstrap {
     /**
      * Class constructor.
      *
@@ -40,7 +40,7 @@ class Loader {
         }
         // Plugin version
         if ( ! defined( 'CCFIC_VERSION' ) ) {
-            define( 'CCFIC_VERSION', '0.7.2' );
+            define( 'CCFIC_VERSION', '0.8.0' );
         }
         // Minimum required version of WordPress
         if ( ! defined( 'CCFIC_WPVER' ) ) {

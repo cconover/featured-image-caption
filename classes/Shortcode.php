@@ -29,8 +29,11 @@ class Shortcode {
             $atts
         );
 
+        // Create a new instance of the Caption class
+        $caption = new Caption();
+
         // Get the caption data
-        $captiondata = $this->caption_data( $post->ID );
+        $captiondata = $caption->caption_data( $post->ID );
 
         // Format-specific flags to force format, ordered by presedence
         do {
@@ -50,13 +53,13 @@ class Shortcode {
         // Select the output format
         switch ( $a['format'] ) {
             case 'plaintext':
-                $caption = $this->plaintext( $captiondata, $atts );
+                $output = $caption->plaintext( $captiondata, $atts );
                 break;
             default:
-                $caption = $this->html( $captiondata, $atts );
+                $output = $caption->html( $captiondata, $atts );
         }
 
-        return $caption;
+        return $output;
     }
 
     /**
@@ -75,9 +78,14 @@ class Shortcode {
             unset($atts['format']);
         }
 
-        // If no flags are set and $all is true, return true
-        if ($all && empty($atts)) {
-            return true;
+        // If no flags are set
+        if (empty($atts)) {
+            // If $all is set, which assumes all attributes
+            if ( $all ) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Cycle through all attributes and return true when we find our flag
