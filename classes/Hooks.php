@@ -44,9 +44,6 @@ class Hooks {
     private function manage() {
         $manage = new Manage();
 
-        // Plugin activation
-        register_activation_hook( CCFIC_PATH, array( $manage, 'activate' ) );
-
         // Plugin deactivation
         register_deactivation_hook( CCFIC_PATH, array( $manage, 'deactivate' ) );
     }
