@@ -1,9 +1,9 @@
 <?php
 /*
- * Test global functions of the plugin.
+ * Test functions in the primary plugin file.
  */
 
-class FunctionsTest extends WP_UnitTestCase {
+class PrimaryTest extends WP_UnitTestCase {
     /**
      * Caption data
      */
