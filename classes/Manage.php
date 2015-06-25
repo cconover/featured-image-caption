@@ -20,36 +20,6 @@ class Manage {
     }
 
     /**
-     * Plugin activation. This method is static because WordPress needs to be able
-     * to access it directly, before the rest of the plugin is loaded.
-     *
-     * @since 0.7.0
-     */
-    public static function activate()
-    {
-        // Check to make sure the version of WordPress being used is compatible with the plugin
-        if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
-            wp_die('Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.');
-        }
-
-        // Check that the current theme support featured images
-        if (! current_theme_supports('post-thumbnails')) {
-            wp_die('Your current theme does not have support for featured images, which is required to use this plugin. Please add support in your current theme, or activate a theme that already supports them.');
-        }
-
-        // Default plugin options
-        $options = new \stdClass();
-        $options->version = CCFIC_VERSION; // Current plugin version
-        $options->auto_append = true; // Automatically append caption to featured image
-        $options->container = true; // Wrap the caption HTML in a container div
-
-        // Add options to database
-        $result = add_option(CCFIC_KEY.'_options', $options);
-
-        return $result;
-    }
-
-    /**
      * Plugin deactivation.
      *
      * @since 0.7.0
