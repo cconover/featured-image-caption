@@ -187,8 +187,8 @@ class Caption {
      */
     public function post_thumbnail_filter($html)
     {
-        // If automatic caption append is not enabled, return the HTML unchanged
-        if (empty($this->options->auto_append)) {
+        // If automatic caption append is not enabled or we're not in The Loop, return the HTML unchanged
+        if ( empty( $this->options->auto_append ) || ! in_the_loop() ) {
             return $html;
         }
 

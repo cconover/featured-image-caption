@@ -1,14 +1,14 @@
 === Featured Image Caption ===
 Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
-Tags: image, caption, featured image
+Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
 Tested up to: 4.2.2
 Stable tag: 0.8.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Easily add and display a caption to the featured image of a post.
+Easily add and display a caption for the featured image of a post.
 
 == Description ==
 
@@ -88,6 +88,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.1 =
+Restricts the automatic caption insertion to only occur in The Loop.
 
 = 0.8.0 =
 * Changes the name of the shortcode from `cc-featured-image-caption` to `ccfic`. This was done for a few reasons. First, WordPress documentation advises against hyphens in shortcode names, so in order to follow best practices the hyphens have been removed. Second, it's easier to type the abbreviation when using the shortcode. Please note, the old shortcode name still works for now, but you should expect that it will be removed entirely by the time this plugin reaches its 1.0.0 release. As such, please update all the locations that you use the shortcode. Please see the [shortcode documentation](https://github.com/cconover/wp-featured-image-caption/wiki/Shortcode) for usage information.
