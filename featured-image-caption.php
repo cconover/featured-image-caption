@@ -1,14 +1,15 @@
 <?php
 
 /*
- * Plugin Name: Featured Image Caption
- * Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
- * Description: Set a caption for the featured image of a post that can be displayed on your site.
- * Version: 0.8.1
- * Author: Christiaan Conover
- * Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
- * License: GPLv2.
- */
+Plugin Name: Featured Image Caption
+Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
+Description: Set a caption for the featured image of a post that can be displayed on your site.
+Version: 0.8.1
+Author: Christiaan Conover
+Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
+License: GPLv2.
+Text Domain: cc-featured-image-caption
+*/
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
@@ -98,6 +99,7 @@ function ccfic_activate()
 {
     // Check to make sure the version of WordPress being used is compatible with the plugin
     if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
+        deactivate_plugins( plugin_basename( CCFIC_PATH ) );
         wp_die('Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.');
     }
 
