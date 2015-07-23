@@ -1,6 +1,6 @@
 {
     "name": "cconover/featured-image-caption",
-    "description": "Featured Image Caption plugin for WordPress.",
+    "description": "Easily add and display a caption for the featured image of a post.",
     "type": "wordpress-plugin",
     "require": {
         "composer/installers": "^1.0"
@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "cconover\\FeaturedImageCaption\\": "classes/"
+            "cconover\\FeaturedImageCaption\\": "includes/classes/"
         }
     },
     "license": "GPL-2.0+",
