@@ -39,7 +39,7 @@ class CaptionTest extends WP_UnitTestCase {
         $this->string = new \stdClass();
 
         // HTML string
-        $this->string->html = '<div class="cc-featured-image-caption"><span class="cc-featured-image-caption-text">' . $this->postmeta['caption_text'] . '</span> <span class="cc-featured-image-caption-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
+        $this->string->html = '<div class="ccfic"><span class="ccfic-text">' . $this->postmeta['caption_text'] . '</span> <span class="ccfic-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
 
         // Plaintext string
         $this->string->plaintext = $this->postmeta['caption_text'] . ' ' . $this->postmeta['source_text'];
@@ -188,7 +188,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'caption-text' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"><span class="cc-featured-image-caption-text">' . $this->postmeta['caption_text'] . '</span></div>';
+        $string = '<div class="ccfic"><span class="ccfic-text">' . $this->postmeta['caption_text'] . '</span></div>';
 
         $this->assertEquals( $string, $test );
     }
@@ -201,7 +201,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'source-text' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"> <span class="cc-featured-image-caption-source">' . $this->postmeta['source_text'] . '</span></div>';
+        $string = '<div class="ccfic"> <span class="ccfic-source">' . $this->postmeta['source_text'] . '</span></div>';
 
         $this->assertEquals( $string, $test );
     }
@@ -214,7 +214,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'caption-text', 'source-text' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"><span class="cc-featured-image-caption-text">' . $this->postmeta['caption_text'] . '</span> <span class="cc-featured-image-caption-source">' . $this->postmeta['source_text'] . '</span></div>';
+        $string = '<div class="ccfic"><span class="ccfic-text">' . $this->postmeta['caption_text'] . '</span> <span class="ccfic-source">' . $this->postmeta['source_text'] . '</span></div>';
 
         $this->assertEquals( $string, $test );
     }
@@ -227,7 +227,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'source-link' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"> <span class="cc-featured-image-caption-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
+        $string = '<div class="ccfic"> <span class="ccfic-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
 
         $this->assertEquals( $string, $test );
     }
@@ -250,7 +250,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'faw3aardvwasfeasdfasdf' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"></div>';
+        $string = '<div class="ccfic"></div>';
 
         $this->assertEquals( $string, $test );
     }
@@ -263,7 +263,7 @@ class CaptionTest extends WP_UnitTestCase {
         $test = $this->caption->html( $this->postmeta, array( 'faw3aardvwasfeasdfasdf', 'caption-text' ) );
 
         // Expected output
-        $string = '<div class="cc-featured-image-caption"><span class="cc-featured-image-caption-text">' . $this->postmeta['caption_text'] . '</span></div>';
+        $string = '<div class="ccfic"><span class="ccfic-text">' . $this->postmeta['caption_text'] . '</span></div>';
 
         $this->assertEquals( $string, $test );
     }

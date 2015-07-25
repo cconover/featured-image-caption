@@ -21,7 +21,7 @@ class Hooks {
             $this->manage();
 
             // Post meta box
-            $this->metabox();
+            $this->meta_box();
 
             // Plugin options
             $this->options();
@@ -55,14 +55,14 @@ class Hooks {
      *
      * @since 0.7.0
      */
-    private function metabox() {
-        $metabox = new MetaBox();
+    private function meta_box() {
+        $meta_box = new Meta_Box();
 
         // Add meta box
-        add_action('add_meta_boxes', array($metabox, 'metabox'));
+        add_action('add_meta_boxes', array($meta_box, 'meta_box'));
 
         // Save the caption when the post is saved
-        add_action('save_post', array($metabox, 'save_metabox'));
+        add_action('save_post', array($meta_box, 'save_meta_box'));
     }
 
     /**

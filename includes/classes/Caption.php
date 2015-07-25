@@ -19,7 +19,7 @@ class Caption {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFIC_KEY.'_options' );
+        $this->options = get_option( CCFIC_ID . '_options' );
     }
 
     /**

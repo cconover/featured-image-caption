@@ -8,11 +8,11 @@
 
 namespace cconover\FeaturedImageCaption;
 
-class MetaBox {
+class Meta_Box {
     /**
      * Create the meta box.
      */
-    public function metabox()
+    public function meta_box()
     {
         // Specify the screens where the meta box should be available
         $screens = apply_filters('cc_featured_image_caption_screens', array('post', 'page'));
@@ -22,7 +22,7 @@ class MetaBox {
             add_meta_box(
                 CCFIC_ID, // HTML ID for the meta box
                 CCFIC_NAME, // Title of the meta box displayed to the us
-                array($this, 'metabox_callback'), // Callback function for the meta box to display it to the user
+                array($this, 'meta_box_callback'), // Callback function for the meta box to display it to the user
                 $screen, // Locations where the meta box should be shown
                 'side' // Location where the meta box should be shown. This one is placed on the side.
             );
@@ -32,7 +32,7 @@ class MetaBox {
     /**
      * Featured image caption meta box callback.
      */
-    public function metabox_callback($post)
+    public function meta_box_callback($post)
     {
         // Add a nonce field to verify data submissions came from our site
         wp_nonce_field(CCFIC_ID, CCFIC_KEY.'_nonce');
@@ -58,7 +58,7 @@ class MetaBox {
     /**
      * Save the meta box data.
      */
-    public function save_metabox($post_id)
+    public function save_meta_box($post_id)
     {
         /*
         Verify using the nonce that the data was submitted from our meta box on our site.

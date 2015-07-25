@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 0.8.1
+Tested up to: 4.2.3
+Stable tag: 0.8.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,10 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.2 =
+* Improved validation of supported PHP version. If PHP is too old, the plugin is deactivated and a warning is displayed.
+* Bug fixes and improvements.
 
 = 0.8.1 =
 Restricts the automatic caption insertion to only occur in The Loop.

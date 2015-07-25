@@ -4,7 +4,7 @@
 Plugin Name: Featured Image Caption
 Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
 Description: Set a caption for the featured image of a post that can be displayed on your site.
-Version: 0.8.1
+Version: 0.8.2
 Author: Christiaan Conover
 Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
 License: GPLv2.
@@ -16,20 +16,19 @@ if (!defined('ABSPATH')) {
     die('You cannot access this resource directly.');
 }
 
-// Check that the version of PHP is sufficient
-if (version_compare(phpversion(), '5.3', '<')) {
-    trigger_error('PHP version '.phpversion().' is unsupported, must be version 5.3 or newer', E_USER_ERROR);
-
-    return;
-}
-
 /* Define plugin constants */
-define('CCFIC_ID', 'cc-featured-image-caption'); // Plugin ID
-define('CCFIC_NAME', 'Featured Image Caption'); // Plugin name
-define('CCFIC_VERSION', '0.8.1'); // Plugin version
-define('CCFIC_WPVER', '3.5'); // Minimum required version of WordPress
-define('CCFIC_KEY', 'cc_featured_image_caption'); // Database key
-define('CCFIC_PATH', __FILE__); // Path to the primary plugin file
+define( 'CCFIC_ID', 'ccfic' ); // Plugin ID
+define( 'CCFIC_NAME', 'Featured Image Caption' ); // Plugin name
+define( 'CCFIC_VERSION', '0.8.2' ); // Plugin version
+define( 'CCFIC_WPVER', '3.5' ); // Minimum required version of WordPress
+define( 'CCFIC_KEY', 'cc_featured_image_caption' ); // Database key (legacy support, ID now used)
+define( 'CCFIC_PATH', __FILE__) ; // Path to the primary plugin file
+
+// Check that the version of PHP is sufficient
+if ( version_compare( phpversion(), '5.3', '<' ) ) {
+    deactivate_plugins( plugin_basename( CCFIC_PATH ) );
+    wp_die( 'PHP version '.phpversion().' is unsupported by ' . CCFIC_NAME . ', must be version 5.3 or newer.' );
+}
 
 if (is_admin()) {
     // Plugin activation
@@ -103,14 +102,18 @@ function ccfic_activate()
         wp_die('Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.');
     }
 
+    // Plugin environment data
+    $env = new \stdClass();
+    $env->version = CCFIC_VERSION;
+
+    // Add environment data to the database
+    add_option( CCFIC_ID . '_env', $env );
+
     // Default plugin options
     $options = new \stdClass();
-    $options->version = CCFIC_VERSION; // Current plugin version
     $options->auto_append = true; // Automatically append caption to featured image
     $options->container = true; // Wrap the caption HTML in a container div
 
     // Add options to database
-    $result = add_option(CCFIC_KEY.'_options', $options);
-
-    return $result;
+    add_option( CCFIC_ID . '_options', $options );
 }

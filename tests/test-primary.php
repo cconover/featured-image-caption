@@ -30,7 +30,7 @@ class PrimaryTest extends WP_UnitTestCase {
         $this->string = new \stdClass();
 
         // HTML string
-        $this->string->html = '<div class="cc-featured-image-caption"><span class="cc-featured-image-caption-text">' . $this->postmeta['caption_text'] . '</span> <span class="cc-featured-image-caption-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
+        $this->string->html = '<div class="ccfic"><span class="ccfic-text">' . $this->postmeta['caption_text'] . '</span> <span class="ccfic-source"><a href="' . $this->postmeta['source_url'] . '" target="_blank">' . $this->postmeta['source_text'] . '</a></span></div>';
 
         // Plaintext string
         $this->string->plaintext = $this->postmeta['caption_text'] . ' ' . $this->postmeta['source_text'];

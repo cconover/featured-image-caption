@@ -19,7 +19,7 @@ class Option {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFIC_KEY.'_options' );
+        $this->options = get_option( CCFIC_ID . '_options' );
     }
 
     /**
@@ -43,8 +43,8 @@ class Option {
     {
         // Register the plugin options call and the sanitation callback
         register_setting(
-            CCFIC_KEY.'_options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
-            CCFIC_KEY.'_options', // The name of the plugin options entry in the database.
+            CCFIC_ID.'_options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
+            CCFIC_ID.'_options', // The name of the plugin options entry in the database.
             array($this, 'options_validate') // The callback method to validate plugin options
         );
 
@@ -124,7 +124,7 @@ class Option {
     {
         $checked = (! empty($this->options->auto_append)) ? ' checked' : null;
 
-        echo '<input id="'.CCFIC_KEY.'_options[auto_append]" name="'.CCFIC_KEY.'_options[auto_append]" type="checkbox"'.$checked.'>';
+        echo '<input id="'.CCFIC_ID.'_options[auto_append]" name="'.CCFIC_ID.'_options[auto_append]" type="checkbox"'.$checked.'>';
         echo '<p class="description"><strong>Recommended.</strong> Automatically display the caption data you set for the featured image wherever the featured image is displayed. You do not have to make any modifications to your theme files. If you don\'t know what this means or why you wouldn\'t want this enabled, leave it checked.</p>';
     }
 
@@ -135,7 +135,7 @@ class Option {
     {
         $checked = (! empty($this->options->container)) ? ' checked' : null;
 
-        echo '<input id="'.CCFIC_KEY.'_options[container]" name="'.CCFIC_KEY.'_options[container]" type="checkbox"'.$checked.'>';
+        echo '<input id="'.CCFIC_ID.'_options[container]" name="'.CCFIC_ID.'_options[container]" type="checkbox"'.$checked.'>';
         echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
     }
 
@@ -157,7 +157,7 @@ class Option {
 
             <form action="options.php" method="post">
                 <?php
-                settings_fields(CCFIC_KEY.'_options_fields');
+                settings_fields(CCFIC_ID.'_options_fields');
         do_settings_sections(CCFIC_ID);
         submit_button();
         ?>

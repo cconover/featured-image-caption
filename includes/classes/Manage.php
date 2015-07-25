@@ -24,12 +24,8 @@ class Manage {
      *
      * @since 0.7.0
      */
-    public function deactivate()
-    {
-        // Remove the plugin options from the database
-        $result = delete_option(CCFIC_KEY.'_options');
+    public function deactivate() {
 
-        return $result;
     }
 
     /**
@@ -39,12 +35,20 @@ class Manage {
      */
     private function upgrade()
     {
-        // Get the plugin options
-        $options = get_option(CCFIC_KEY.'_options');
+        // Get plugin environment data
+        $env = get_option( CCFIC_ID . '_env' );
 
-        // If the option does not exist, return
+        // Get the plugin options
+        $options = get_option( CCFIC_ID . '_options' );
+
+        // If the option does not exist, try legacy name
         if ( ! $options ) {
-            return;
+            $options = get_option( CCFIC_KEY . '_options' );
+
+            // If there still is no option data, return
+            if ( ! $options ) {
+                return;
+            }
         }
 
         // If the options are stored as an array
@@ -69,8 +73,19 @@ class Manage {
 
             $version = $options['version'];
         } else {
-            $version = $options->version;
+            // If the options data has the plugin version, move it to env data
+            if ( ! empty( $options->version ) ) {
+                // If the environment data is not available, create an object
+                if ( empty( $env ) ) {
+                    $env = new \stdClass();
+                }
+
+                $env->version = $options->version;
+            }
         }
+
+        // Set a local variable for the plugin version
+        $version = $env->version;
 
         /*
         Check whether the database-stored plugin version number is less than
@@ -78,7 +93,7 @@ class Manage {
         saved in the database.
         */
         if (! empty($version) && version_compare($version, CCFIC_VERSION, '<')) {
-            /* === UPGRADE ACTIONS === (oldest to latest) */
+            /* === UPGRADE ACTIONS (oldest to latest) === */
 
             /*
             Version 0.5.0
@@ -130,17 +145,37 @@ class Manage {
                 $options->version = $version;
             }
 
+            /*
+            Version 0.8.2
+            Changes the structure of plugin environment and options data.
+            */
+            if ( version_compare( $version, '0.8.2', '<' ) ) {
+                // Create an object for environment data
+                $env = new \stdClass();
+
+                // Store the plugin version
+                $env->version = $version;
+
+                // Remove the plugin version from options data
+                unset( $options->version );
+
+                // Rename the plugin options in the database
+                delete_option( CCFIC_KEY . '_options' );
+                add_option( CCFIC_ID . '_options', $options );
+            }
+
 
             /* === END UPGRADE ACTIONS === */
 
+            // Save options
+            update_option( CCFIC_ID . '_options', $options );
+
             /* LAST STEPS ALWAYS!!! Update the plugin version saved in the database */
             // Set the value of the plugin version
-            $options->version = CCFIC_VERSION;
+            $env->version = CCFIC_VERSION;
 
-            // Save to the database
-            $result = update_option(CCFIC_KEY.'_options', $options);
-
-            return $result;
+            // Save environment data
+            update_option( CCFIC_ID . '_env', $env );
         }
     }
 }
