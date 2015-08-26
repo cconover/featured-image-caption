@@ -1,24 +1,24 @@
 {
-    "name": "cconover/featured-image-caption",
-    "description": "Easily add and display a caption for the featured image of a post.",
-    "type": "wordpress-plugin",
-    "require": {
-        "composer/installers": "^1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^4.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "cconover\\FeaturedImageCaption\\": "includes/classes/"
-        }
-    },
-    "license": "GPL-2.0+",
-    "authors": [
-        {
-            "name": "Christiaan Conover",
-            "email": "dev@cconover.com"
+  "name": "cconover/featured-image-caption",
+  "description": "Easily add and display a caption for the featured image of a post.",
+  "type": "wordpress-plugin",
+  "require": {
+    "composer/installers": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "cconover\\FeaturedImageCaption\\": "classes/"
+    }
+  },
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Christiaan Conover",
+      "email": "dev@cconover.com"
         }
     ],
-    "minimum-stability": "stable"
+  "minimum-stability": "stable"
 }
