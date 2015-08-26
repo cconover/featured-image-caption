@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: Featured Image Caption
 Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
@@ -22,7 +21,7 @@ define( 'CCFIC_NAME', 'Featured Image Caption' ); // Plugin name
 define( 'CCFIC_VERSION', '0.8.2' ); // Plugin version
 define( 'CCFIC_WPVER', '3.5' ); // Minimum required version of WordPress
 define( 'CCFIC_KEY', 'cc_featured_image_caption' ); // Database key (legacy support, ID now used)
-define( 'CCFIC_PATH', __FILE__) ; // Path to the primary plugin file
+define( 'CCFIC_PATH', __FILE__ ) ; // Path to the primary plugin file
 
 // Check that the version of PHP is sufficient
 if ( version_compare( phpversion(), '5.3', '<' ) ) {
@@ -30,9 +29,9 @@ if ( version_compare( phpversion(), '5.3', '<' ) ) {
     wp_die( 'PHP version '.phpversion().' is unsupported by ' . CCFIC_NAME . ', must be version 5.3 or newer.' );
 }
 
-if (is_admin()) {
+if ( is_admin() ) {
     // Plugin activation
-    register_activation_hook(__FILE__, 'ccfic_activate');
+    register_activation_hook( __FILE__, 'ccfic_activate' );
 }
 
 /**
@@ -46,7 +45,7 @@ function cc_featured_image_caption_loader()
     // Instantiate the plugin
     new \cconover\FeaturedImageCaption\Bootstrap();
 }
-add_action('plugins_loaded', 'cc_featured_image_caption_loader');
+add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
 /**
  * Use this function to retrieve the caption for the featured image.
@@ -60,14 +59,14 @@ add_action('plugins_loaded', 'cc_featured_image_caption_loader');
  *
  * @return string The formatted caption.
  */
-function cc_featured_image_caption($echo = true, $html = true)
+function cc_featured_image_caption( $echo = true, $html = true )
 {
     // Call the caption data using the shortcode
     $format = $html ? '' : ' format="plaintext"';
-    $caption = do_shortcode('[ccfic'.$format.']');
+    $caption = do_shortcode( '[ccfic' . $format . ']' );
 
     // If the result should be printed to the screen.
-    if ($echo) {
+    if ( $echo ) {
         echo $caption;
     } else {
         return $caption;
@@ -97,9 +96,9 @@ function cc_has_featured_image_caption()
 function ccfic_activate()
 {
     // Check to make sure the version of WordPress being used is compatible with the plugin
-    if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
+    if ( version_compare( get_bloginfo( 'version' ), CCFIC_WPVER, '<' ) ) {
         deactivate_plugins( plugin_basename( CCFIC_PATH ) );
-        wp_die('Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.');
+        wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
     }
 
     // Plugin environment data

@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
-Tested up to: 4.2.3
-Stable tag: 0.8.2
+Tested up to: 4.3
+Stable tag: 0.8.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Easily add and display a caption for the featured image of a post.
 
 Featured Image Caption makes it simple to show a caption with the featured image of a post or page. It works seamlessly with most themes, with no coding required. If you like to mess about in the code, it supports that too.
 
-For full details about the plugin and usage documentation, [check out the plugin on GitHub](https://github.com/cconover/wp-featured-image-caption).
+For full details about the plugin and usage documentation, [check out the plugin wiki on GitHub](https://github.com/cconover/wp-featured-image-caption/wiki).
 
 == Installation ==
 
@@ -25,7 +25,7 @@ For full details about the plugin and usage documentation, [check out the plugin
 == Frequently Asked Questions ==
 
 = Where do I find the documentation for this plugin? =
-Documentation is maintained on [GitHub](https://github.com/cconover/wp-featured-image-caption). I don't want to maintain two separate sets of documentation and run the risk of conflicting/outdated information, and all of the plugin development happens on GitHub.
+Documentation is maintained on the plugin's [GitHub wiki](https://github.com/cconover/wp-featured-image-caption/wiki). I don't want to maintain two separate sets of documentation and run the risk of conflicting/outdated information, and all of the plugin development happens on GitHub.
 
 == Screenshots ==
 
