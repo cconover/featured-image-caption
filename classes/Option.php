@@ -116,7 +116,7 @@ class Option {
     /**
      * Callback for the 'only on single posts' option.
      *
-     * @since 0.8.3
+     * @since 0.8.2
      */
     public function only_single_callback() {
         // Determine whether the checkbox should be checked
@@ -197,7 +197,7 @@ class Option {
      *
      * Add settings fields to the options page.
      *
-     * @since 0.8.3
+     * @since 0.8.2
      */
     private function settings_fields() {
         // Automatically add the caption to the featured image
