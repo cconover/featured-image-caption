@@ -207,6 +207,9 @@ class Upgrade {
             // Remove the plugin version from options data
             unset( $options->version );
 
+            // Add option value for restricting auto-append to single posts
+            $options->only_single = false;
+
             // Rename the plugin options in the database
             delete_option( CCFIC_KEY . '_options' );
             add_option( CCFIC_ID . '_options', $options );

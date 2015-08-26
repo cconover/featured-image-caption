@@ -4,7 +4,7 @@ Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=pl
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 0.8.1
+Stable tag: 0.8.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ Documentation is maintained on the plugin's [GitHub wiki](https://github.com/cco
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.8.2 =
+When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
 
 = 0.8.0 =
 NOTICE: Changes the shortcode name and fixes bugs in the shortcode. PLEASE check the changelog for this version to see how this affects you.
@@ -90,6 +93,7 @@ Initial release.
 == Changelog ==
 
 = 0.8.2 =
+* When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
 * Improved validation of supported PHP version. If PHP is too old, the plugin is deactivated and a warning is displayed.
 * Bug fixes and improvements.
 
