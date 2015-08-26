@@ -111,6 +111,7 @@ function ccfic_activate()
     // Default plugin options
     $options = new \stdClass();
     $options->auto_append = true; // Automatically append caption to featured image
+    $options->only_single = false; // Restrict automatic caption appending to single posts
     $options->container = true; // Wrap the caption HTML in a container div
 
     // Add options to database
