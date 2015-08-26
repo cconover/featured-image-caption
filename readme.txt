@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 0.8.1
+Tested up to: 4.3
+Stable tag: 0.8.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Easily add and display a caption for the featured image of a post.
 
 Featured Image Caption makes it simple to show a caption with the featured image of a post or page. It works seamlessly with most themes, with no coding required. If you like to mess about in the code, it supports that too.
 
-For full details about the plugin and usage documentation, [check out the plugin on GitHub](https://github.com/cconover/wp-featured-image-caption).
+For full details about the plugin and usage documentation, [check out the plugin wiki on GitHub](https://github.com/cconover/wp-featured-image-caption/wiki).
 
 == Installation ==
 
@@ -25,13 +25,16 @@ For full details about the plugin and usage documentation, [check out the plugin
 == Frequently Asked Questions ==
 
 = Where do I find the documentation for this plugin? =
-Documentation is maintained on [GitHub](https://github.com/cconover/wp-featured-image-caption). I don't want to maintain two separate sets of documentation and run the risk of conflicting/outdated information, and all of the plugin development happens on GitHub.
+Documentation is maintained on the plugin's [GitHub wiki](https://github.com/cconover/wp-featured-image-caption/wiki). I don't want to maintain two separate sets of documentation and run the risk of conflicting/outdated information, and all of the plugin development happens on GitHub.
 
 == Screenshots ==
 
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.8.2 =
+When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
 
 = 0.8.0 =
 NOTICE: Changes the shortcode name and fixes bugs in the shortcode. PLEASE check the changelog for this version to see how this affects you.
@@ -88,6 +91,11 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.2 =
+* When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
+* Improved validation of supported PHP version. If PHP is too old, the plugin is deactivated and a warning is displayed.
+* Bug fixes and improvements.
 
 = 0.8.1 =
 Restricts the automatic caption insertion to only occur in The Loop.

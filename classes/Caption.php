@@ -19,7 +19,7 @@ class Caption {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFIC_KEY.'_options' );
+        $this->options = get_option( CCFIC_ID . '_options' );
     }
 
     /**
@@ -30,24 +30,23 @@ class Caption {
      *
      * @return array|null|string If successful, returns the requested result. If unsuccessful, returns null.
      */
-    public function caption($html = true)
-    {
+    public function caption( $html = true ) {
         // Get the caption data
         global $post;
-        $captiondata = $this->caption_data($post->ID);
+        $captiondata = $this->caption_data( $post->ID );
 
         // If there is no caption data, return empty.
-        if (empty($captiondata)) {
+        if ( empty( $captiondata ) ) {
             return;
         }
 
         // If HTML is not desired, return the raw array
-        if (empty($html)) {
+        if ( empty( $html ) ) {
             return $captiondata;
         }
 
         // Get the HTML
-        $caption = $this->html($captiondata);
+        $caption = $this->html( $captiondata );
 
         return $caption;
     }
@@ -59,18 +58,17 @@ class Caption {
      *
      * @return bool|array $caption If successful, the array of caption data. If unsuccessful, return false.
      */
-    public function caption_data($id)
-    {
+    public function caption_data( $id ) {
         // Get the caption data from the post meta
-        $caption = get_post_meta($id, '_'.CCFIC_KEY, true);
+        $caption = get_post_meta( $id, '_' . CCFIC_KEY, true );
 
         // If caption data is not present, return false
-        if (empty($caption)) {
+        if ( empty( $caption ) ) {
             return false;
         }
 
         // Legacy support: if caption is a string, convert it to an array
-        if (is_string($caption)) {
+        if ( is_string( $caption ) ) {
             $string = $caption;
             $caption = array(
                 'caption_text' => $string
@@ -96,8 +94,7 @@ class Caption {
      *
      * @return string $caption        The fully assembled caption HTML.
      */
-    public function html($captiondata, $atts = array())
-    {
+    public function html( $captiondata, $atts = array() ) {
         // Initialize the caption HTML
         if (! empty($this->options->container)) {
             // Start with the container <div>
@@ -185,11 +182,19 @@ class Caption {
      *
      * @return string $html The updated post thumbnail HTML.
      */
-    public function post_thumbnail_filter($html)
+    public function post_thumbnail_filter( $html )
     {
         // If automatic caption append is not enabled or we're not in The Loop, return the HTML unchanged
         if ( empty( $this->options->auto_append ) || ! in_the_loop() ) {
             return $html;
+        }
+
+        // If auto-append is enabled and should only be done on single posts
+        if ( ! empty( $this->options->auto_append ) && ! empty( $this->options->only_single ) ) {
+            // If we're not on a single post
+            if ( ! is_single() ) {
+                return $html;
+            }
         }
 
         // Get the caption HTML

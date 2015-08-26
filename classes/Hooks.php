@@ -17,8 +17,8 @@ class Hooks {
     public function __construct() {
         // Admin
         if ( is_admin() ) {
-            // Plugin management
-            $this->manage();
+            // Plugin upgrades
+            $this->upgrade();
 
             // Post meta box
             $this->metabox();
@@ -35,17 +35,17 @@ class Hooks {
     }
 
     /**
-     * Plugin activation, deactivation, and other management tasks.
+     * Caption data.
      *
      * @internal
      *
      * @since 0.7.0
      */
-    private function manage() {
-        $manage = new Manage();
+    private function caption() {
+        $caption = new Caption();
 
-        // Plugin deactivation
-        register_deactivation_hook( CCFIC_PATH, array( $manage, 'deactivate' ) );
+        // Hook into post thumbnail
+        add_filter( 'post_thumbnail_html', array( $caption, 'post_thumbnail_filter' ) );
     }
 
     /**
@@ -100,16 +100,16 @@ class Hooks {
     }
 
     /**
-     * Caption data.
+     * Plugin upgrades.
      *
      * @internal
      *
-     * @since 0.7.0
+     * @since 0.8.2
      */
-    private function caption() {
-        $caption = new Caption();
+    private function upgrade() {
+        $upgrade = new Upgrade();
 
-        // Hook into post thumbnail
-        add_filter('post_thumbnail_html', array($caption, 'post_thumbnail_filter'));
+        // Run plugin upgrades
+        $upgrade->upgrades();
     }
 }

@@ -11,6 +11,8 @@ namespace cconover\FeaturedImageCaption;
 class MetaBox {
     /**
      * Create the meta box.
+     *
+     * @todo Support for custom post types.
      */
     public function metabox()
     {

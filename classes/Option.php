@@ -19,7 +19,7 @@ class Option {
      */
     public function __construct() {
         // Get plugin options
-        $this->options = get_option( CCFIC_KEY.'_options' );
+        $this->options = get_option( CCFIC_ID . '_options' );
     }
 
     /**
@@ -43,8 +43,8 @@ class Option {
     {
         // Register the plugin options call and the sanitation callback
         register_setting(
-            CCFIC_KEY.'_options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
-            CCFIC_KEY.'_options', // The name of the plugin options entry in the database.
+            CCFIC_ID.'_options_fields', // The namespace for plugin options fields. This must match settings_fields() used when rendering the form.
+            CCFIC_ID.'_options', // The name of the plugin options entry in the database.
             array($this, 'options_validate') // The callback method to validate plugin options
         );
 
@@ -64,23 +64,8 @@ class Option {
             CCFIC_ID
         );
 
-        // Automatically add the caption to the featured image
-        add_settings_field(
-            'auto_append', // Field ID
-            'Automatically add the caption to the featured image', // Field title/label, displayed to the user
-            array($this, 'auto_append_callback'), // Callback method to display the option field
-            CCFIC_ID, // Page ID for the options page
-            'display' // Settings section in which to display the field
-        );
-
-        // Add a container <div> to the caption HTML
-        add_settings_field(
-            'container', // Field ID
-            'Add a container &lt;div&gt; to the caption HTML', // Field title/label, displayed to the user
-            array($this, 'container_callback'), // Callback method to display the option field
-            CCFIC_ID, // Page ID for the options page
-            'display' // Settings section in which to display the field
-        );
+        // Settings fields
+        $this->settings_fields();
     }
 
     /**
@@ -122,10 +107,24 @@ class Option {
      */
     public function auto_append_callback()
     {
-        $checked = (! empty($this->options->auto_append)) ? ' checked' : null;
+        $checked = ( ! empty( $this->options->auto_append ) ) ? ' checked' : null;
 
-        echo '<input id="'.CCFIC_KEY.'_options[auto_append]" name="'.CCFIC_KEY.'_options[auto_append]" type="checkbox"'.$checked.'>';
+        echo '<input id="' . CCFIC_ID . '_options_auto_append" name="' . CCFIC_ID . '_options[auto_append]" type="checkbox"' . $checked . '>';
         echo '<p class="description"><strong>Recommended.</strong> Automatically display the caption data you set for the featured image wherever the featured image is displayed. You do not have to make any modifications to your theme files. If you don\'t know what this means or why you wouldn\'t want this enabled, leave it checked.</p>';
+    }
+
+    /**
+     * Callback for the 'only on single posts' option.
+     *
+     * @since 0.8.2
+     */
+    public function only_single_callback() {
+        // Determine whether the checkbox should be checked
+        $checked = ( ! empty( $this->options->only_single ) ? ' checked' : null );
+
+        // Display the checkbox and additional option information
+        echo '<input id="' . CCFIC_ID . '_options_only_single" name="' . CCFIC_ID . '_options[only_single]" type="checkbox"' . $checked . '>';
+        echo '<p class="description">If, when auto appending is enabled, you only want the caption to be appended when viewing a single post, enable this option.</p>';
     }
 
     /**
@@ -133,9 +132,9 @@ class Option {
      */
     public function container_callback()
     {
-        $checked = (! empty($this->options->container)) ? ' checked' : null;
+        $checked = ( ! empty( $this->options->container ) ) ? ' checked' : null;
 
-        echo '<input id="'.CCFIC_KEY.'_options[container]" name="'.CCFIC_KEY.'_options[container]" type="checkbox"'.$checked.'>';
+        echo '<input id="' . CCFIC_ID . '_options_container" name="' . CCFIC_ID . '_options[container]" type="checkbox"' . $checked . '>';
         echo '<p class="description"><strong>Recommended.</strong> Put the entire HTML output of the caption information inside a &lt;div&gt; tag, to give you more control over styling the caption. If you do not know what this means, leave it checked.</p>';
     }
 
@@ -157,7 +156,7 @@ class Option {
 
             <form action="options.php" method="post">
                 <?php
-                settings_fields(CCFIC_KEY.'_options_fields');
+                settings_fields(CCFIC_ID.'_options_fields');
         do_settings_sections(CCFIC_ID);
         submit_button();
         ?>
@@ -183,17 +182,49 @@ class Option {
             }
 
             $options = $options_obj;
-
-            // If the version number is missing, add it
-            if ( empty( $options->version ) ) {
-                $options->version = CCFIC_VERSION;
-            }
         }
 
         // Set the values to store in the database for each of the options
-        $options->auto_append = (! empty($input['auto_append'])) ? true : false;
-        $options->container = (! empty($input['container'])) ? true : false;
+        $options->auto_append = ( ! empty( $input['auto_append'] ) ) ? true : false;
+        $options->only_single = ( ! empty( $input['only_single'] ) ) ? true : false;
+        $options->container = ( ! empty( $input['container'] ) ) ? true : false;
 
         return $options;
+    }
+
+    /**
+     * Settings fields.
+     *
+     * Add settings fields to the options page.
+     *
+     * @since 0.8.2
+     */
+    private function settings_fields() {
+        // Automatically add the caption to the featured image
+        add_settings_field(
+            'auto_append',
+            'Automatically add the caption to the featured image',
+            array($this, 'auto_append_callback'),
+            CCFIC_ID,
+            'display'
+        );
+
+        // Only show the caption when viewing a single post
+        add_settings_field(
+            'only_single',
+            'Only automatically append on single posts',
+            array( $this, 'only_single_callback' ),
+            CCFIC_ID,
+            'display'
+        );
+
+        // Add a container <div> to the caption HTML
+        add_settings_field(
+            'container',
+            'Add a container &lt;div&gt; to the caption HTML',
+            array($this, 'container_callback'),
+            CCFIC_ID,
+            'display'
+        );
     }
 }
