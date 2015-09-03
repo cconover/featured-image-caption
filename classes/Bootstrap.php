@@ -3,19 +3,30 @@
 /**
  * Plugin loader.
  *
- * @since 0.7.0
+ * @filesource
  */
 
 namespace cconover\FeaturedImageCaption;
 
+/**
+ * Plugin loader
+ *
+ * When the plugin is loaded, the environment needs to be set up. This class
+ * bootstraps the plugin's classes and hooks.
+ *
+ * @since 0.7.0
+ */
 class Bootstrap {
     /**
-     * Class constructor.
+     * Load the bootstrap processes.
+     *
+     * @api
      *
      * @since 0.7.0
      */
-    public function __construct() {
+    public function load() {
         // Hooks and filters
-        new Hooks();
+        $hooks = new Hooks();
+        $hooks->call();
     }
 }

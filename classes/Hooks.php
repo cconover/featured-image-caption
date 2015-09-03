@@ -1,20 +1,30 @@
 <?php
-
 /**
  * WordPress hooks and filters for the plugin.
  *
- * @since 0.7.0
+ * @filesource
  */
 
 namespace cconover\FeaturedImageCaption;
 
+/**
+ * WordPress hooks and filters for the plugin.
+ *
+ * The plugin depends on WordPress action and filter hooks. To make management
+ * of the hooks easier, they are organized inside this class. Each method inside
+ * this class handles the hooks for another class in this plugin.
+ *
+ * @since 0.7.0
+ */
 class Hooks {
     /**
-     * Class constructor.
+     * Call the hooks.
+     *
+     * @api
      *
      * @since 0.7.0
      */
-    public function __construct() {
+    public function call() {
         // Admin
         if ( is_admin() ) {
             // Plugin upgrades
