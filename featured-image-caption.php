@@ -43,7 +43,8 @@ function cc_featured_image_caption_loader()
     require_once 'vendor/autoload.php';
 
     // Instantiate the plugin
-    new \cconover\FeaturedImageCaption\Bootstrap();
+    $bootstrap = new \cconover\FeaturedImageCaption\Bootstrap();
+    $bootstrap->load();
 }
 add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
 
