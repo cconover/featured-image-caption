@@ -27,13 +27,20 @@ class Caption {
      *
      * @param bool $html Whether the result should be fully-formed HTML.
      *                   True: create HTML. False: return raw data array.
+     * @param int $post_id The ID of the post for which caption data should
+     *                     be retrieved.
      *
      * @return array|null|string If successful, returns the requested result. If unsuccessful, returns null.
      */
-    public function caption( $html = true ) {
+    public function caption( $html = true, $post_id = null ) {
+        // Set the post ID
+        if ( empty( $post_id ) ) {
+            global $post;
+            $post_id = $post->ID;
+        }
+
         // Get the caption data
-        global $post;
-        $captiondata = $this->caption_data( $post->ID );
+        $captiondata = $this->caption_data( $post_id );
 
         // If there is no caption data, return empty.
         if ( empty( $captiondata ) ) {

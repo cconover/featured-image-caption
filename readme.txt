@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 0.8.2
+Tested up to: 4.5
+Stable tag: 0.8.3
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ Documentation is maintained on the plugin's [GitHub wiki](https://github.com/cco
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.8.3 =
+Add support for the WordPress REST API.
 
 = 0.8.2 =
 When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
@@ -91,6 +94,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.3 =
+Add support for the WordPress REST API. The caption fields are added as properties in the `posts` response. See [plugin documentation for the REST API](https://github.com/cconover/featured-image-caption/wiki/REST-API) for usage information.
 
 = 0.8.2 =
 * When automatic caption appending is enabled, the plugin can optionally only append the caption when viewing a single post.
