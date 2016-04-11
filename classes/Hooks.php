@@ -40,6 +40,11 @@ class Hooks {
         // Caption data
         $this->caption();
 
+        // REST API (if supported)
+        if ( class_exists( 'WP_Rest_Controller' ) ) {
+            $this->rest_api();
+        }
+
         // Shortcode
         $this->shortcode();
     }
@@ -90,6 +95,20 @@ class Hooks {
 
         // Initialize plugin options
         add_action('admin_init', array($option, 'options_init'));
+    }
+
+    /**
+     * REST API support
+     *
+     * @internal
+     *
+     * @since 0.8.3
+     */
+    private function rest_api() {
+        $rest_api = new RestApi();
+
+        // Register the fields
+        add_action( 'rest_api_init', array( $rest_api, 'register_fields' ) );
     }
 
     /**
