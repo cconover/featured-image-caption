@@ -69,9 +69,9 @@ class Caption {
         // Get the caption data from the post meta
         $caption = get_post_meta( $id, '_' . CCFIC_KEY, true );
 
-        // If caption data is not present, return false
+        // If caption data is not present, return null
         if ( empty( $caption ) ) {
-            return false;
+            return;
         }
 
         // Legacy support: if caption is a string, convert it to an array
