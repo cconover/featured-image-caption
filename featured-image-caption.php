@@ -3,7 +3,7 @@
 Plugin Name: Featured Image Caption
 Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
 Description: Set a caption for the featured image of a post that can be displayed on your site.
-Version: 0.8.3
+Version: 0.8.4
 Author: Christiaan Conover
 Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
 License: GPLv2.
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /* Define plugin constants */
 define( 'CCFIC_ID', 'ccfic' ); // Plugin ID
 define( 'CCFIC_NAME', 'Featured Image Caption' ); // Plugin name
-define( 'CCFIC_VERSION', '0.8.3' ); // Plugin version
+define( 'CCFIC_VERSION', '0.8.4' ); // Plugin version
 define( 'CCFIC_WPVER', '3.5' ); // Minimum required version of WordPress
 define( 'CCFIC_KEY', 'cc_featured_image_caption' ); // Database key (legacy support, ID now used)
 define( 'CCFIC_PATH', __FILE__ ) ; // Path to the primary plugin file
