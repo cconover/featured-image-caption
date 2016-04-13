@@ -52,24 +52,16 @@ class RestApi {
         // Get the caption data as non-HTML, raw output
         $data = $caption->caption( false, $post_id );
 
-        // Assemble the caption data into an object
-        $response = new \stdClass();
-
-        // Sanitize the data for use with REST
-        $sanitized = array();
-        foreach ( $data as $key => $value ) {
-            // If the field does not have a value, set the value to false
-            if ( empty( $value ) ) {
-                $value = false;
-            }
-
-            // Add to the sanitized array
-            $sanitized[$key] = $value;
+        // If there's no caption data, set an empty array
+        if ( empty( $data ) ) {
+            $data = array();
         }
 
-        $response->caption_text = $sanitized['caption_text'];
-        $response->source_text = $sanitized['source_text'];
-        $response->source_url = $sanitized['source_url'];
+        // Assemble the caption data into an object
+        $response = new \stdClass();
+        $response->caption_text = $data['caption_text'] ? $data['caption_text'] : false;
+        $response->source_text = $data['source_text'] ? $data['source_text'] : false;
+        $response->source_url = $data['source_url'] ? $data['source_url'] : false;
 
         return $response;
     }
