@@ -167,7 +167,7 @@ class CaptionTest extends WP_UnitTestCase {
         // Get the output from the method
         $test = $this->caption->caption_data( $post->ID );
 
-        $this->assertFalse( $test );
+        $this->assertNull( $test );
     }
 
     /**
