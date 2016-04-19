@@ -59,9 +59,9 @@ class RestApi {
 
         // Assemble the caption data into an object
         $response = new \stdClass();
-        $response->caption_text = $data['caption_text'] ? $data['caption_text'] : false;
-        $response->source_text = $data['source_text'] ? $data['source_text'] : false;
-        $response->source_url = $data['source_url'] ? $data['source_url'] : false;
+        $response->caption_text = isset($data['caption_text']) ? $data['caption_text'] : false;
+        $response->source_text = isset($data['source_text']) ? $data['source_text'] : false;
+        $response->source_url = isset($data['source_url']) ? $data['source_url'] : false;
 
         return $response;
     }
