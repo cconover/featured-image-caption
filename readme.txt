@@ -3,8 +3,8 @@ Contributors: cconover
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
-Tested up to: 4.5
-Stable tag: 0.8.5
+Tested up to: 4.7
+Stable tag: 0.8.6
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ Documentation is maintained on the plugin's [GitHub wiki](https://github.com/cco
 1. Featured Image Caption meta box below the Featured Image meta box.
 
 == Upgrade Notice ==
+
+= 0.8.6 =
+Fix an error thrown due to a deprecated function call for the WP REST API.
 
 = 0.8.5 =
 Fix an issue with empty caption data causing Undefined Index errors for the REST API.
@@ -100,6 +103,9 @@ Fixed check in theme function for whether a caption is set, and how the function
 Initial release.
 
 == Changelog ==
+
+= 0.8.6 =
+Fix an error thrown due to a deprecated function call for the WP REST API.
 
 = 0.8.5 =
 Fix an issue with [empty caption data causing `Undefined Index` errors for the REST API](https://github.com/cconover/featured-image-caption/pull/56).
