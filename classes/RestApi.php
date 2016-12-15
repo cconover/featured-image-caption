@@ -20,7 +20,7 @@ class RestApi {
      */
     public function register_fields() {
         // Featured image caption data
-        register_api_field(
+        register_rest_field(
             'post',
             CCFIC_KEY,
             array(
