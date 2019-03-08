@@ -40,7 +40,7 @@ if ( is_admin() ) {
 function cc_featured_image_caption_loader()
 {
     // Composer autoloader
-    require_once 'vendor/autoload.php';
+    require_once __DIR__ . '/vendor/autoload.php';
 
     // Instantiate the plugin
     $bootstrap = new \cconover\FeaturedImageCaption\Bootstrap();
