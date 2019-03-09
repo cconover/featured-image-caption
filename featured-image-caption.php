@@ -3,7 +3,7 @@
 Plugin Name: Featured Image Caption
 Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
 Description: Set a caption for the featured image of a post that can be displayed on your site.
-Version: 0.8.7
+Version: 0.8.8
 Author: Christiaan Conover
 Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
 License: GPLv2.
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /* Define plugin constants */
 define( 'CCFIC_ID', 'ccfic' ); // Plugin ID
 define( 'CCFIC_NAME', 'Featured Image Caption' ); // Plugin name
-define( 'CCFIC_VERSION', '0.8.7' ); // Plugin version
+define( 'CCFIC_VERSION', '0.8.8' ); // Plugin version
 define( 'CCFIC_WPVER', '3.5' ); // Minimum required version of WordPress
 define( 'CCFIC_KEY', 'cc_featured_image_caption' ); // Database key (legacy support, ID now used)
 define( 'CCFIC_PATH', __FILE__ ) ; // Path to the primary plugin file
@@ -35,13 +35,47 @@ if ( is_admin() ) {
 }
 
 /**
+ * Class autoloader
+ *
+ * Auto-loads classes for the plugin.
+ *
+ * @param string $class The fully-qualified class name.
+ * @return void
+ */
+spl_autoload_register( function ( $class ) {
+
+    // project-specific namespace prefix
+    $prefix = 'cconover\\FeaturedImageCaption\\';
+
+    // base directory for the namespace prefix
+    $base_dir = __DIR__ . '/classes/';
+
+    // does the class use the namespace prefix?
+    $len = strlen( $prefix );
+    if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+        // no, move to the next registered autoloader
+        return;
+    }
+
+    // get the relative class name
+    $relative_class = substr( $class, $len );
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+
+    // if the file exists, require it
+    if ( file_exists( $file ) ) {
+        require $file;
+    }
+} );
+
+/**
  * Plugin loader hook.
  */
 function cc_featured_image_caption_loader()
 {
-    // Composer autoloader
-    require_once __DIR__ . '/vendor/autoload.php';
-
     // Instantiate the plugin
     $bootstrap = new \cconover\FeaturedImageCaption\Bootstrap();
     $bootstrap->load();
