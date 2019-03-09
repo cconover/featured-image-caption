@@ -107,6 +107,9 @@ Initial release.
 
 == Changelog ==
 
+= 0.8.8 =
+Replace the Composer autoloader with an inline autoloader, to reduce plugin size and improve performance.
+
 = 0.8.7 =
 Fix an error caused by a relative include path.
 
