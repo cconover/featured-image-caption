@@ -1,4 +1,6 @@
 # Featured Image Caption
+[![Build Status](https://cloud.drone.io/api/badges/cconover/featured-image-caption/status.svg)](https://cloud.drone.io/cconover/featured-image-caption)
+
 Featured Image Caption makes it simple to show a caption with the featured image of a post or page. It works seamlessly with most themes, with no coding required. If you like to mess about in the code, it supports that too.
 
 ## Installation
