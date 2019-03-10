@@ -35,7 +35,7 @@ steps:
       - docker-php-ext-install mysqli pdo pdo_mysql
       - apt-get update && apt-get -y --no-install-recommends install subversion mariadb-client
       - composer install
-      - sleep 15
+      - sleep 10
       - bash ./bin/install-wp-tests.sh $DB_NAME $DB_USER $DB_PASS $DB_HOSTNAME $WP_VERSION $SKIP_DB_CREATE
       - ./vendor/bin/phpunit
     when:
