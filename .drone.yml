@@ -21,7 +21,7 @@ steps:
         - pull_request
 
   - name: test
-    image: unleashed/php:7.2-ci
+    image: unleashed/php:ci
     environment:
       WP_VERSION: latest
       WP_MULTISITE: 0
@@ -32,17 +32,11 @@ steps:
       SKIP_DB_CREATE: true
     commands:
       - mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
-      - docker-php-ext-install mysqli pdo pdo_mysql
       - apt-get update && apt-get -y --no-install-recommends install subversion mariadb-client
       - composer install
       - sleep 10
       - bash ./bin/install-wp-tests.sh $DB_NAME $DB_USER $DB_PASS $DB_HOSTNAME $WP_VERSION $SKIP_DB_CREATE
       - ./vendor/bin/phpunit
-    when:
-      branch:
-        - master
-        - develop
-        - feature/*
 
   - name: github-release
     image: plugins/github-release
