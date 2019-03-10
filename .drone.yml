@@ -1,0 +1,87 @@
+kind: pipeline
+name: default
+
+steps:
+  # Check that the version number has been updated everywhere, and that a
+  # changelog entry is present for the current version.
+  - name: validate
+    image: alpine
+    commands:
+      - apk -U add pcre2-tools perl
+      - CCFIC_VERSION=$(perl -pe '($_)=/Version:\s([0-9]+([.][0-9]+)+)/' featured-image-caption.php)
+      - pcre2grep -q "^define\(\s?'CCFIC_VERSION',\s?'$CCFIC_VERSION'\s?\)\;.*$" featured-image-caption.php
+      - pcre2grep -q "^Stable tag\:\s$CCFIC_VERSION$" readme.txt
+      - pcre2grep -Mq "^==\s?Changelog\s?==\s*=\s?$CCFIC_VERSION\s?=$" readme.txt
+    when:
+      branch:
+        - master
+        - develop
+      event:
+        - tag
+        - pull_request
+
+  - name: test
+    image: unleashed/php:7.2-ci
+    environment:
+      WP_VERSION: latest
+      WP_MULTISITE: 0
+      DB_NAME: wordpress
+      DB_USER: wordpress
+      DB_PASS: wordpress
+      DB_HOSTNAME: mysql
+      SKIP_DB_CREATE: true
+    commands:
+      - mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+      - docker-php-ext-install mysqli pdo pdo_mysql
+      - apt-get update && apt-get -y --no-install-recommends install subversion mariadb-client
+      - composer install
+      - sleep 15
+      - bash ./bin/install-wp-tests.sh $DB_NAME $DB_USER $DB_PASS $DB_HOSTNAME $WP_VERSION $SKIP_DB_CREATE
+      - ./vendor/bin/phpunit
+    when:
+      branch:
+        - master
+        - develop
+        - feature/*
+
+  - name: github-release
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_access_token
+    when:
+      event:
+        - tag
+
+  - name: publish
+    image: alpine
+    environment:
+      WP_USERNAME:
+        from_secret: wp_repo_username
+      WP_PASSWORD:
+        from_secret: wp_repo_password
+    commands:
+      - apk -U add git perl subversion
+      - CCFIC_VERSION=$(perl -pe '($_)=/Version:\s([0-9]+([.][0-9]+)+)/' featured-image-caption.php)
+      - svn co https://plugins.svn.wordpress.org/featured-image-caption /svn
+      - (cd /svn && svn delete /svn/trunk/* && svn delete /svn/tags/$CCFIC_VERSION)
+      - cp featured-image-caption.php /svn/trunk/
+      - cp -r classes/ /svn/trunk/
+      - cp readme.txt /svn/trunk/
+      - cd /svn
+      - svn add trunk/*
+      - svn cp trunk tags/$CCFIC_VERSION
+      - svn status
+      - svn ci -m "Version "$CCFIC_VERSION --username $WP_USERNAME --password $WP_PASSWORD --no-auth-cache
+    when:
+      event:
+        - tag
+
+services:
+  - name: mysql
+    image: mariadb
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
