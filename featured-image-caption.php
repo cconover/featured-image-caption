@@ -7,7 +7,7 @@ Version: 0.8.9
 Author: Christiaan Conover
 Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
 License: GPLv2.
-Text Domain: cc-featured-image-caption
+Text Domain: ccfic
 */
 
 // Prevent direct access
@@ -139,8 +139,8 @@ function cc_has_featured_image_caption()
  */
 function ccfic_activate()
 {
-    // Check to make sure the version of WordPress being used is compatible with the plugin
-    if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
+    // Check to make sure the version of WordPress is compatible
+    if (version_compare($GLOBALS['wp_version'], CCFIC_WPVER, '<')) {
         deactivate_plugins(plugin_basename(CCFIC_PATH));
         add_action('admin_notices', 'ccfic_unsupported_wp_notice');
         return;
