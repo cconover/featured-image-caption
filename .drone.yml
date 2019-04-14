@@ -15,10 +15,8 @@ steps:
     when:
       branch:
         - master
-        - develop
       event:
         - tag
-        - pull_request
 
   - name: test
     image: unleashed/php:ci
