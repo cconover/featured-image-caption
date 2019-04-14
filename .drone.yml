@@ -13,8 +13,6 @@ steps:
       - pcre2grep -q "^Stable tag\:\s$CCFIC_VERSION$" readme.txt
       - pcre2grep -Mq "^==\s?Changelog\s?==\s*=\s?$CCFIC_VERSION\s?=$" readme.txt
     when:
-      branch:
-        - master
       event:
         - tag
 
