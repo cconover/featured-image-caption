@@ -22,11 +22,11 @@ define('CCFIC_VERSION', '0.8.9'); // Plugin version
 define('CCFIC_WPVER', '3.5'); // Minimum required version of WordPress
 define('CCFIC_PHPVER', '5.6.20'); // Minimum required version of PHP
 define('CCFIC_KEY', 'cc_featured_image_caption'); // Database key (legacy support, ID now used)
-define('CCFIC_PATH', __FILE__) ; // Path to the primary plugin file
+define('CCFIC_PATH', __FILE__); // Path to the primary plugin file
 
 // Check that the version of PHP is sufficient
 if (version_compare(PHP_VERSION, CCFIC_PHPVER, '<')) {
-    require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+    include_once(ABSPATH . 'wp-admin/includes/plugin.php');
     deactivate_plugins(plugin_basename(CCFIC_PATH));
     add_action('admin_notices', 'ccfic_unsupported_php_notice');
     return;
@@ -43,39 +43,43 @@ if (is_admin()) {
  * Auto-loads classes for the plugin.
  *
  * @param string $class The fully-qualified class name.
+ *
  * @return void
  */
-spl_autoload_register(function ($class) {
+spl_autoload_register(
+    function ($class) {
+        // project-specific namespace prefix
+        $prefix = 'cconover\\FeaturedImageCaption\\';
 
-    // project-specific namespace prefix
-    $prefix = 'cconover\\FeaturedImageCaption\\';
+        // base directory for the namespace prefix
+        $base_dir = __DIR__ . '/classes/';
 
-    // base directory for the namespace prefix
-    $base_dir = __DIR__ . '/classes/';
+        // does the class use the namespace prefix?
+        $len = strlen($prefix);
+        if (strncmp($prefix, $class, $len) !== 0) {
+            // no, move to the next registered autoloader
+            return;
+        }
 
-    // does the class use the namespace prefix?
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // no, move to the next registered autoloader
-        return;
+        // get the relative class name
+        $relative_class = substr($class, $len);
+
+        // replace the namespace prefix with the base directory, replace namespace
+        // separators with directory separators in the relative class name, append
+        // with .php
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        // if the file exists, require it
+        if (file_exists($file)) {
+            include $file;
+        }
     }
-
-    // get the relative class name
-    $relative_class = substr($class, $len);
-
-    // replace the namespace prefix with the base directory, replace namespace
-    // separators with directory separators in the relative class name, append
-    // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-
-    // if the file exists, require it
-    if (file_exists($file)) {
-        require $file;
-    }
-});
+);
 
 /**
  * Plugin loader hook.
+ *
+ * @return void
  */
 function cc_featured_image_caption_loader()
 {
@@ -130,6 +134,8 @@ function cc_has_featured_image_caption()
  * Plugin activation.
  *
  * @since 0.8.1
+ *
+ * @return void
  */
 function ccfic_activate()
 {
@@ -161,6 +167,8 @@ function ccfic_activate()
  * Notice of unsupported PHP version.
  *
  * @since 0.8.9
+ *
+ * @return void
  */
 function ccfic_unsupported_php_notice()
 {
@@ -175,6 +183,8 @@ function ccfic_unsupported_php_notice()
  * Notice of unsupported WordPress version.
  *
  * @since 0.8.9
+ *
+ * @return void
  */
 function ccfic_unsupported_wp_notice()
 {
