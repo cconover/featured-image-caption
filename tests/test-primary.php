@@ -15,9 +15,9 @@ class PrimaryTest extends WP_UnitTestCase {
     private $string;
 
     /**
-     * Class constructor.
+     * Set up the test suite properties.
      */
-    public function __construct() {
+    private function set_test_data() {
         // Create the caption data
         $this->postmeta = array(
             'caption_text' => 'Here is caption text.',
@@ -39,7 +39,10 @@ class PrimaryTest extends WP_UnitTestCase {
     /**
      * Test the theme function with no arguments.
      */
-    function test_theme_function_noargs() {
+    public function test_theme_function_noargs() {
+        // Set up test data
+        $this->set_test_data();
+
         global $post;
 
         // Create a new post
@@ -57,7 +60,10 @@ class PrimaryTest extends WP_UnitTestCase {
     /**
      * Theme function, echo is true, html is false
      */
-    function test_theme_function_plaintext() {
+    public function test_theme_function_plaintext() {
+        // Set up test data
+        $this->set_test_data();
+
         global $post;
 
         // Create a new post
@@ -75,7 +81,10 @@ class PrimaryTest extends WP_UnitTestCase {
     /**
      * Theme function, echo is false, html is true
      */
-    function test_theme_function_noecho() {
+    public function test_theme_function_noecho() {
+        // Set up test data
+        $this->set_test_data();
+
         global $post;
 
         // Create a new post
@@ -93,7 +102,10 @@ class PrimaryTest extends WP_UnitTestCase {
     /**
      * Theme function, echo is false, html is false
      */
-    function test_theme_function_noecho_plaintext() {
+    public function test_theme_function_noecho_plaintext() {
+        // Set up test data
+        $this->set_test_data();
+
         global $post;
 
         // Create a new post
@@ -112,7 +124,10 @@ class PrimaryTest extends WP_UnitTestCase {
      * Caption set check
      * Should always return true, as this function is deprecated
      */
-    function test_caption_set_check() {
+    public function test_caption_set_check() {
+        // Set up test data
+        $this->set_test_data();
+
         $test = cc_has_featured_image_caption();
 
         $this->assertTrue( $test );
