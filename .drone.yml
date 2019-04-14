@@ -45,7 +45,8 @@ steps:
       - apk -U add git perl subversion
       - CCFIC_VERSION=$(perl -pe '($_)=/Version:\s([0-9]+([.][0-9]+)+)/' featured-image-caption.php)
       - svn co https://plugins.svn.wordpress.org/featured-image-caption /svn
-      - (cd /svn && svn delete /svn/trunk/* && svn delete /svn/tags/$CCFIC_VERSION)
+      - (cd /svn && svn delete /svn/trunk/*)
+      - if [ -d "/svn/tags/$CCFIC_VERSION" ]; then rm -rf /svn/tags/$CCFIC_VERSION; fi
       - cp featured-image-caption.php /svn/trunk/
       - cp -r classes/ /svn/trunk/
       - cp readme.txt /svn/trunk/
@@ -53,7 +54,7 @@ steps:
       - svn add trunk/*
       - svn cp trunk tags/$CCFIC_VERSION
       - svn status
-      - svn ci -m "Version "$CCFIC_VERSION --username $WP_USERNAME --password $WP_PASSWORD --no-auth-cache
+      - svn ci -m "Version $CCFIC_VERSION" --username $WP_USERNAME --password $WP_PASSWORD --no-auth-cache
     when:
       event:
         - tag
