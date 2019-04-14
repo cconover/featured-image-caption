@@ -3,7 +3,7 @@
 Plugin Name: Featured Image Caption
 Plugin URI: https://christiaanconover.com/code/wp-featured-image-caption?utm_source=wp-featured-image-caption
 Description: Set a caption for the featured image of a post that can be displayed on your site.
-Version: 0.8.8
+Version: 0.8.9
 Author: Christiaan Conover
 Author URI: https://christiaanconover.com?utm_source=wp-featured-image-caption-author
 License: GPLv2.
@@ -16,22 +16,25 @@ if (!defined('ABSPATH')) {
 }
 
 /* Define plugin constants */
-define( 'CCFIC_ID', 'ccfic' ); // Plugin ID
-define( 'CCFIC_NAME', 'Featured Image Caption' ); // Plugin name
-define( 'CCFIC_VERSION', '0.8.8' ); // Plugin version
-define( 'CCFIC_WPVER', '3.5' ); // Minimum required version of WordPress
-define( 'CCFIC_KEY', 'cc_featured_image_caption' ); // Database key (legacy support, ID now used)
-define( 'CCFIC_PATH', __FILE__ ) ; // Path to the primary plugin file
+define('CCFIC_ID', 'ccfic'); // Plugin ID
+define('CCFIC_NAME', 'Featured Image Caption'); // Plugin name
+define('CCFIC_VERSION', '0.8.9'); // Plugin version
+define('CCFIC_WPVER', '3.5'); // Minimum required version of WordPress
+define('CCFIC_PHPVER', '5.6.20'); // Minimum required version of PHP
+define('CCFIC_KEY', 'cc_featured_image_caption'); // Database key (legacy support, ID now used)
+define('CCFIC_PATH', __FILE__) ; // Path to the primary plugin file
 
 // Check that the version of PHP is sufficient
-if ( version_compare( phpversion(), '5.6.0', '<' ) ) {
-    deactivate_plugins( plugin_basename( CCFIC_PATH ) );
-    wp_die( 'PHP version '.phpversion().' is unsupported by ' . CCFIC_NAME . ', must be version 5.3 or newer.' );
+if (version_compare(PHP_VERSION, CCFIC_PHPVER, '<')) {
+    require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+    deactivate_plugins(plugin_basename(CCFIC_PATH));
+    add_action('admin_notices', 'ccfic_unsupported_php_notice');
+    return;
 }
 
-if ( is_admin() ) {
+if (is_admin()) {
     // Plugin activation
-    register_activation_hook( __FILE__, 'ccfic_activate' );
+    register_activation_hook(__FILE__, 'ccfic_activate');
 }
 
 /**
@@ -42,7 +45,7 @@ if ( is_admin() ) {
  * @param string $class The fully-qualified class name.
  * @return void
  */
-spl_autoload_register( function ( $class ) {
+spl_autoload_register(function ($class) {
 
     // project-specific namespace prefix
     $prefix = 'cconover\\FeaturedImageCaption\\';
@@ -51,25 +54,25 @@ spl_autoload_register( function ( $class ) {
     $base_dir = __DIR__ . '/classes/';
 
     // does the class use the namespace prefix?
-    $len = strlen( $prefix );
-    if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
         // no, move to the next registered autoloader
         return;
     }
 
     // get the relative class name
-    $relative_class = substr( $class, $len );
+    $relative_class = substr($class, $len);
 
     // replace the namespace prefix with the base directory, replace namespace
     // separators with directory separators in the relative class name, append
     // with .php
-    $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
 
     // if the file exists, require it
-    if ( file_exists( $file ) ) {
+    if (file_exists($file)) {
         require $file;
     }
-} );
+});
 
 /**
  * Plugin loader hook.
@@ -80,7 +83,7 @@ function cc_featured_image_caption_loader()
     $bootstrap = new \cconover\FeaturedImageCaption\Bootstrap();
     $bootstrap->load();
 }
-add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
+add_action('plugins_loaded', 'cc_featured_image_caption_loader');
 
 /**
  * Use this function to retrieve the caption for the featured image.
@@ -94,14 +97,14 @@ add_action( 'plugins_loaded', 'cc_featured_image_caption_loader' );
  *
  * @return string The formatted caption.
  */
-function cc_featured_image_caption( $echo = true, $html = true )
+function cc_featured_image_caption($echo = true, $html = true)
 {
     // Call the caption data using the shortcode
     $format = $html ? '' : ' format="plaintext"';
-    $caption = do_shortcode( '[ccfic' . $format . ']' );
+    $caption = do_shortcode('[ccfic' . $format . ']');
 
     // If the result should be printed to the screen.
-    if ( $echo ) {
+    if ($echo) {
         echo $caption;
     } else {
         return $caption;
@@ -131,9 +134,10 @@ function cc_has_featured_image_caption()
 function ccfic_activate()
 {
     // Check to make sure the version of WordPress being used is compatible with the plugin
-    if ( version_compare( get_bloginfo( 'version' ), CCFIC_WPVER, '<' ) ) {
-        deactivate_plugins( plugin_basename( CCFIC_PATH ) );
-        wp_die( 'Your version of WordPress is too old to use this plugin. Please upgrade to the latest version of WordPress.' );
+    if (version_compare(get_bloginfo('version'), CCFIC_WPVER, '<')) {
+        deactivate_plugins(plugin_basename(CCFIC_PATH));
+        add_action('admin_notices', 'ccfic_unsupported_wp_notice');
+        return;
     }
 
     // Plugin environment data
@@ -141,7 +145,7 @@ function ccfic_activate()
     $env->version = CCFIC_VERSION;
 
     // Add environment data to the database
-    add_option( CCFIC_ID . '_env', $env );
+    add_option(CCFIC_ID . '_env', $env);
 
     // Default plugin options
     $options = new \stdClass();
@@ -150,5 +154,33 @@ function ccfic_activate()
     $options->container = true; // Wrap the caption HTML in a container div
 
     // Add options to database
-    add_option( CCFIC_ID . '_options', $options );
+    add_option(CCFIC_ID . '_options', $options);
+}
+
+/**
+ * Notice of unsupported PHP version.
+ *
+ * @since 0.8.9
+ */
+function ccfic_unsupported_php_notice()
+{
+    ?>
+    <div class="notice notice-error is-dismissable">
+        <p><?php esc_html_e(sprintf('%s requires PHP %s or newer. The plugin has been deactivated.', CCFIC_NAME, CCFIC_PHPVER), CCFIC_ID); ?></p>
+    </div>
+    <?php
+}
+
+/**
+ * Notice of unsupported WordPress version.
+ *
+ * @since 0.8.9
+ */
+function ccfic_unsupported_wp_notice()
+{
+    ?>
+    <div class="notice notice-error is-dismissable">
+        <p><?php esc_html_e(sprintf('%s requires WordPress version %s or newer. Please upgrade to the latest version of WordPress. The plugin has been deactivated.', CCFIC_NAME, CCFIC_WPVER), CCFIC_ID); ?></p>
+    </div>
+    <?php
 }
