@@ -36,15 +36,6 @@ steps:
       - bash ./bin/install-wp-tests.sh $DB_NAME $DB_USER $DB_PASS $DB_HOSTNAME $WP_VERSION $SKIP_DB_CREATE
       - ./vendor/bin/phpunit
 
-  - name: github-release
-    image: plugins/github-release
-    settings:
-      api_key:
-        from_secret: github_access_token
-    when:
-      event:
-        - tag
-
   - name: publish
     image: alpine
     environment:
