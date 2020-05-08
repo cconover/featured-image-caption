@@ -52,12 +52,13 @@ steps:
       - cp readme.txt /svn/trunk/
       - cd /svn
       - svn add trunk/*
+      - mkdir -p tags/$CCFIC_VERSION
       - svn cp trunk tags/$CCFIC_VERSION
       - svn status
       - svn ci -m "Version $CCFIC_VERSION" --username $WP_USERNAME --password $WP_PASSWORD --no-auth-cache
     when:
-      event:
-        - tag
+      branch:
+        - master
 
 services:
   - name: mysql

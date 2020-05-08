@@ -1,5 +1,5 @@
 === Featured Image Caption ===
-Contributors: cconover
+Contributors: cconover, someguy9
 Donate link: https://christiaanconover.com/code/wp-featured-image-caption?ref=plugin-readme
 Tags: image, caption, featured image, shortcode
 Requires at least: 3.5
